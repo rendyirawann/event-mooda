@@ -44,6 +44,9 @@ use App\Http\Controllers\Backend\Superadmin\PartnerLogoController;
 use App\Http\Controllers\Backend\Superadmin\SiteContentController;
 use App\Http\Controllers\Backend\Superadmin\FaqController;
 use App\Http\Controllers\Backend\Superadmin\SocialLinkController;
+use App\Http\Controllers\Backend\Superadmin\EventCategoryController;
+use App\Http\Controllers\Backend\Superadmin\ProvinceController;
+use App\Http\Controllers\Backend\Superadmin\CityController;
 use App\Http\Controllers\Backend\Superadmin\MaintenanceController;
 
 /*
@@ -230,6 +233,24 @@ Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->gr
         Route::put('/admin/social-links/{social}', [SocialLinkController::class, 'update'])->name('social-links.update');
         Route::post('/admin/social-links/{social}/toggle', [SocialLinkController::class, 'toggle'])->name('social-links.toggle');
         Route::delete('/admin/social-links/{social}', [SocialLinkController::class, 'destroy'])->name('social-links.destroy');
+
+        // ===== Master Data Event (Superadmin): Kategori, Provinsi, Kota (+ foto monumen) =====
+        Route::get('/admin/event-categories', [EventCategoryController::class, 'index'])->name('event-categories.index');
+        Route::post('/admin/event-categories', [EventCategoryController::class, 'store'])->name('event-categories.store');
+        Route::put('/admin/event-categories/{category}', [EventCategoryController::class, 'update'])->name('event-categories.update');
+        Route::post('/admin/event-categories/{category}/toggle', [EventCategoryController::class, 'toggle'])->name('event-categories.toggle');
+        Route::delete('/admin/event-categories/{category}', [EventCategoryController::class, 'destroy'])->name('event-categories.destroy');
+
+        Route::get('/admin/provinces', [ProvinceController::class, 'index'])->name('provinces.index');
+        Route::post('/admin/provinces', [ProvinceController::class, 'store'])->name('provinces.store');
+        Route::put('/admin/provinces/{province}', [ProvinceController::class, 'update'])->name('provinces.update');
+        Route::delete('/admin/provinces/{province}', [ProvinceController::class, 'destroy'])->name('provinces.destroy');
+
+        Route::get('/admin/cities', [CityController::class, 'index'])->name('cities.index');
+        Route::post('/admin/cities', [CityController::class, 'store'])->name('cities.store');
+        Route::put('/admin/cities/{city}', [CityController::class, 'update'])->name('cities.update');
+        Route::post('/admin/cities/{city}/toggle', [CityController::class, 'toggle'])->name('cities.toggle');
+        Route::delete('/admin/cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
 
         // Mode Pemeliharaan (platform-wide, Superadmin)
         Route::get('/admin/maintenance-settings', [MaintenanceController::class, 'index'])->name('maintenance-settings.index');

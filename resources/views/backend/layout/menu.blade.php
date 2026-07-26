@@ -230,6 +230,38 @@
             </div>
         @endcan
 
+        {{-- DATA EVENT (dropdown): Kategori, Provinsi, Kota + Monumen — Superadmin only --}}
+        @can('blog.manage')
+            @php($dataEventActive = request()->routeIs('event-categories.*') || request()->routeIs('provinces.*') || request()->routeIs('cities.*'))
+            <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
+                class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention menu-here-bg me-0 me-lg-2 {{ $dataEventActive ? 'here show ' : '' }}">
+                <span class="menu-link px-4 {{ $dataEventActive ? 'active ' : '' }}">
+                    <span class="menu-title">Data Event</span>
+                    <span class="menu-arrow d-lg-none"></span>
+                </span>
+                <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown px-lg-2 py-lg-4 w-lg-210px">
+                    <div class="menu-item {{ request()->routeIs('event-categories.*') ? 'here show ' : '' }}">
+                        <a class="menu-link py-3 {{ request()->routeIs('event-categories.*') ? 'active ' : '' }}" href="{{ route('event-categories.index') }}">
+                            <span class="menu-icon"><i class="ki-outline ki-abstract-26 fs-2"></i></span>
+                            <span class="menu-title">Kategori Event</span>
+                        </a>
+                    </div>
+                    <div class="menu-item {{ request()->routeIs('provinces.*') ? 'here show ' : '' }}">
+                        <a class="menu-link py-3 {{ request()->routeIs('provinces.*') ? 'active ' : '' }}" href="{{ route('provinces.index') }}">
+                            <span class="menu-icon"><i class="ki-outline ki-map fs-2"></i></span>
+                            <span class="menu-title">Provinsi</span>
+                        </a>
+                    </div>
+                    <div class="menu-item {{ request()->routeIs('cities.*') ? 'here show ' : '' }}">
+                        <a class="menu-link py-3 {{ request()->routeIs('cities.*') ? 'active ' : '' }}" href="{{ route('cities.index') }}">
+                            <span class="menu-icon"><i class="ki-outline ki-geolocation fs-2"></i></span>
+                            <span class="menu-title">Kota & Monumen</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endcan
+
         {{-- LANGGANAN / BILLING: owner & admin tenant (bukan Superadmin yang tanpa tenant) --}}
         @if (auth()->user()->tenant_id && auth()->user()->can('view_billing'))
             <div
