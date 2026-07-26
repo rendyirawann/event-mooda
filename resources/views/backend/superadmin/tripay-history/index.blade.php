@@ -1,135 +1,74 @@
 @extends('backend.layout.app')
-@section('title', 'Riwayat Pembayaran Tripay')
+@section('title', 'Riwayat Pembayaran Tiket')
+@push('stylesheets')
+<style>
+    .thx{ --primary:#D90429; --section:#FFF8F6; }
+    .thx, .thx h2,.thx h3{ font-family:'Plus Jakarta Sans','Inter',sans-serif; }
+    .thx .stat-grid{ display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px }
+    .thx .stat{ background:#fff;border:1px solid #eee;border-radius:18px;padding:18px 20px }
+    .thx .stat .lbl{ font-size:12px;color:#888;font-weight:600 }
+    .thx .stat .val{ font-weight:800;font-size:26px;margin-top:3px }
+    .thx .stat .val.red{ color:var(--primary) }
+    .thx .filters{ background:#fff;border:1px solid #eee;border-radius:16px;padding:14px 18px;margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap }
+    .thx .tbl-card{ background:#fff;border:1px solid #eee;border-radius:20px;overflow:hidden }
+    .thx table{ width:100%;border-collapse:collapse }
+    .thx th{ text-align:left;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#999;font-weight:700;padding:14px 20px;border-bottom:1px solid #f0f0f0;background:var(--section) }
+    .thx td{ padding:14px 20px;border-bottom:1px solid #f4f4f4;font-size:13.5px }
+    .thx tr:last-child td{ border-bottom:0 }
+    .thx .inv{ font-weight:700 }
+    .thx .sub{ font-size:11.5px;color:#aaa }
+    .thx .badge{ font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px }
+    @media(max-width:900px){ .thx .stat-grid{grid-template-columns:repeat(2,1fr)} .thx .tbl-card{overflow-x:auto} }
+</style>
+@endpush
 @section('content')
+<div id="kt_app_content" class="app-content flex-column-fluid mt-4">
+    <div id="kt_app_content_container" class="app-container container-xxl thx">
 
-<div id="kt_app_content" class="app-content flex-column-fluid mt-5">
-    <div id="kt_app_content_container" class="app-container container-xxl">
+        <h2 class="fw-bold mb-1">Riwayat Pembayaran Tiket Event</h2>
+        <p class="text-muted mb-4">Khusus transaksi tiket event (invoice <code>TIX-</code>) via Tripay. Riwayat Tripay keseluruhan (POS + event) ada di aplikasi monitor terpisah.</p>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-5">
-            <div>
-                <h2 class="fw-bold mb-1">Riwayat Pembayaran Tripay</h2>
-                <span class="text-muted">Semua transaksi <b>POS / Mooda</b> & <b>Tiket Event</b> dalam satu tempat (sumber: Tripay {{ $production ? 'Produksi' : 'Sandbox' }}).</span>
-            </div>
+        <div class="stat-grid">
+            <div class="stat"><div class="lbl">Total Transaksi</div><div class="val">{{ number_format($counts['total']) }}</div></div>
+            <div class="stat"><div class="lbl">Lunas</div><div class="val red">{{ number_format($counts['paid']) }}</div></div>
+            <div class="stat"><div class="lbl">Pending</div><div class="val">{{ number_format($counts['pending']) }}</div></div>
+            <div class="stat"><div class="lbl">Pendapatan (lunas)</div><div class="val">Rp {{ number_format($counts['revenue'], 0, ',', '.') }}</div></div>
         </div>
 
-        <div class="alert alert-primary fs-7">
-            Ditandai otomatis dari prefix invoice: <span class="badge badge-light-success">Tiket Event</span> = <code>TIX-…</code>,
-            <span class="badge badge-light-primary">POS / Mooda</span> = lainnya (<code>DSP-DEP-</code>, <code>MDA-INV-</code>, dll).
+        <form method="GET" class="filters">
+            <span class="fw-semibold text-muted fs-8">Status:</span>
+            <select name="status" class="form-select form-select-sm w-150px" onchange="this.form.submit()">
+                <option value="">Semua Status</option>
+                @foreach (['paid' => 'Lunas', 'pending' => 'Pending', 'expired' => 'Kedaluwarsa', 'cancelled' => 'Batal'] as $k => $v)
+                    <option value="{{ $k }}" @selected($status === $k)>{{ $v }}</option>
+                @endforeach
+            </select>
+        </form>
+
+        <div class="tbl-card">
+            <table>
+                <thead><tr><th>Waktu</th><th>Invoice</th><th>Event</th><th>Pembeli</th><th>Metode</th><th class="text-end">Jumlah</th><th>Status</th></tr></thead>
+                <tbody>
+                    @forelse ($orders as $o)
+                        @php $badge = ['paid'=>'success','pending'=>'warning','expired'=>'secondary','cancelled'=>'danger'][$o->status] ?? 'secondary'; @endphp
+                        <tr>
+                            <td class="text-muted fs-8" style="white-space:nowrap">{{ $o->created_at?->format('d M Y H:i') }}</td>
+                            <td><div class="inv">{{ $o->invoice_no }}</div><div class="sub">{{ $o->payment_ref }}</div></td>
+                            <td class="fs-7">{{ $o->event?->title ?? '—' }}</td>
+                            <td class="fs-7">{{ $o->buyer_name }}</td>
+                            <td class="fs-7">{{ data_get($o->payment_payload, 'payment_name') ?? $o->payment_method ?? '—' }}</td>
+                            <td class="text-end fw-bold" style="white-space:nowrap">Rp {{ number_format($o->total, 0, ',', '.') }}</td>
+                            <td><span class="badge badge-light-{{ $badge }}">{{ ucfirst($o->status) }}</span></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="7" class="text-center text-muted py-10">Belum ada transaksi tiket event.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
-        @if ($error)
-            <div class="alert alert-danger">{{ $error }}</div>
-        @endif
-
-        {{-- FILTER --}}
-        <div class="card card-flush mb-5">
-            <div class="card-body py-4">
-                <div class="d-flex flex-wrap gap-3 align-items-center">
-                    <form method="GET" class="d-flex gap-2 align-items-center">
-                        <label class="fw-semibold fs-7 text-muted">Status:</label>
-                        <select name="status" class="form-select form-select-sm form-select-solid w-150px" onchange="this.form.submit()">
-                            <option value="">Semua Status</option>
-                            @foreach (['PAID' => 'Lunas', 'UNPAID' => 'Belum Bayar', 'EXPIRED' => 'Kedaluwarsa', 'FAILED' => 'Gagal', 'REFUND' => 'Refund'] as $k => $v)
-                                <option value="{{ $k }}" @selected($status === $k)>{{ $v }}</option>
-                            @endforeach
-                        </select>
-                    </form>
-                    <div class="btn-group" role="group" id="typeFilter">
-                        <button type="button" class="btn btn-sm btn-light-primary active" data-type="all">Semua</button>
-                        <button type="button" class="btn btn-sm btn-light-primary" data-type="event">Tiket Event</button>
-                        <button type="button" class="btn btn-sm btn-light-primary" data-type="pos">POS / Mooda</button>
-                    </div>
-                    <input type="text" id="searchBox" class="form-control form-control-sm form-control-solid w-250px ms-auto" placeholder="Cari invoice / pelanggan / ref...">
-                </div>
-            </div>
-        </div>
-
-        {{-- TABEL --}}
-        <div class="card card-flush">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-row-dashed align-middle gy-3" id="txTable">
-                        <thead>
-                            <tr class="fw-bold text-muted fs-7 text-uppercase">
-                                <th>Waktu</th>
-                                <th>Invoice (Merchant Ref)</th>
-                                <th>Tipe</th>
-                                <th>Pelanggan</th>
-                                <th>Metode</th>
-                                <th class="text-end">Jumlah</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($rows as $r)
-                                @php
-                                    $badge = ['PAID' => 'success', 'UNPAID' => 'warning', 'EXPIRED' => 'secondary', 'FAILED' => 'danger', 'REFUND' => 'info'][$r['status']] ?? 'secondary';
-                                @endphp
-                                <tr data-type="{{ $r['type'] }}" data-search="{{ strtolower($r['merchant_ref'] . ' ' . $r['customer'] . ' ' . $r['reference']) }}">
-                                    <td class="text-muted fs-8" style="white-space:nowrap">{{ $r['created_at'] ?? '-' }}</td>
-                                    <td>
-                                        <div class="fw-semibold fs-7">{{ $r['merchant_ref'] ?: '-' }}</div>
-                                        <div class="text-muted fs-8">{{ $r['reference'] }}</div>
-                                    </td>
-                                    <td><span class="badge badge-light-{{ $r['type'] === 'event' ? 'success' : 'primary' }}">{{ $r['type_label'] }}</span></td>
-                                    <td class="fs-7">{{ $r['customer'] }}</td>
-                                    <td class="fs-7">{{ $r['method'] }}</td>
-                                    <td class="text-end fw-bold fs-7" style="white-space:nowrap">Rp {{ number_format($r['amount'], 0, ',', '.') }}</td>
-                                    <td><span class="badge badge-light-{{ $badge }}">{{ $r['status'] }}</span></td>
-                                </tr>
-                            @empty
-                                <tr><td colspan="7" class="text-center text-muted py-8">{{ $error ? 'Gagal memuat.' : 'Belum ada transaksi.' }}</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                    <div id="noResult" class="text-center text-muted py-6 d-none">Tidak ada baris cocok dengan filter.</div>
-                </div>
-
-                {{-- PAGINATION --}}
-                @if (! empty($pagination))
-                    @php
-                        $cur = (int) ($pagination['current_page'] ?? 1);
-                        $last = (int) ($pagination['last_page'] ?? 1);
-                        $total = (int) ($pagination['total_records'] ?? 0);
-                        $q = fn ($p) => route('tripay-history.index', array_filter(['page' => $p, 'status' => $status]));
-                    @endphp
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-4">
-                        <span class="text-muted fs-8">Total {{ number_format($total) }} transaksi · halaman {{ $cur }} dari {{ $last }}</span>
-                        <div class="d-flex gap-2">
-                            <a href="{{ $q(max(1, $cur - 1)) }}" class="btn btn-sm btn-light {{ $cur <= 1 ? 'disabled' : '' }}">← Sebelumnya</a>
-                            <a href="{{ $q(min($last, $cur + 1)) }}" class="btn btn-sm btn-light {{ $cur >= $last ? 'disabled' : '' }}">Berikutnya →</a>
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </div>
+        <div class="mt-4">{{ $orders->onEachSide(1)->links('pagination::bootstrap-5') }}</div>
 
     </div>
 </div>
-
-@push('scripts')
-<script>
-    // Filter tipe (client-side, dalam halaman aktif)
-    var curType = 'all', curSearch = '';
-    var rows = Array.prototype.slice.call(document.querySelectorAll('#txTable tbody tr[data-type]'));
-    function apply() {
-        var shown = 0;
-        rows.forEach(function (tr) {
-            var okType = curType === 'all' || tr.dataset.type === curType;
-            var okSearch = !curSearch || (tr.dataset.search || '').indexOf(curSearch) !== -1;
-            var show = okType && okSearch;
-            tr.style.display = show ? '' : 'none';
-            if (show) shown++;
-        });
-        document.getElementById('noResult').classList.toggle('d-none', shown > 0 || rows.length === 0);
-    }
-    document.querySelectorAll('#typeFilter button').forEach(function (b) {
-        b.addEventListener('click', function () {
-            document.querySelectorAll('#typeFilter button').forEach(function (x) { x.classList.remove('active'); });
-            b.classList.add('active'); curType = b.dataset.type; apply();
-        });
-    });
-    document.getElementById('searchBox').addEventListener('input', function () { curSearch = this.value.toLowerCase().trim(); apply(); });
-</script>
-@endpush
 @endsection

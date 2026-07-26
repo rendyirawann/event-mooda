@@ -72,7 +72,7 @@
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('tripay-history.*') ? 'active' : '' }}" href="{{ route('tripay-history.index') }}">
                         <span class="menu-icon"><i class="ki-outline ki-credit-cart fs-2"></i></span>
-                        <span class="menu-title">Riwayat Tripay</span>
+                        <span class="menu-title">Riwayat Pembayaran</span>
                     </a>
                 </div>
                 <div class="menu-item">
