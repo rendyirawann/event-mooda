@@ -52,7 +52,7 @@
             </div>
         @endif
         {{-- DATA MASTER (disembunyikan utk Superadmin di mode Analitik) --}}
-        @if (! ($isSuperadminView ?? false) || ($saMode ?? 'pos') === 'pos')
+        @if (false) {{-- POS disembunyikan di event-mooda --}}
         @can('view_data_master')
             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
                 class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
@@ -92,7 +92,7 @@
         @endif
 
         {{-- REPORT (disembunyikan utk Superadmin di mode Analitik) --}}
-        @if (! ($isSuperadminView ?? false) || ($saMode ?? 'pos') === 'pos')
+        @if (false) {{-- POS disembunyikan di event-mooda --}}
         @can('view_report')
             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
                 class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
@@ -170,25 +170,9 @@
         @endcan
 
 
-        {{-- MANAJEMEN TENANT: Superadmin only --}}
+        {{-- MANAJEMEN TENANT + AKUN DEMO POS (disembunyikan di event-mooda) --}}
         @can('view_tenants')
-            <div
-                class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('tenants.*') ? 'here show ' : '' }}">
-                <a href="{{ route('tenants.index') }}"
-                    class="menu-link px-4 {{ request()->routeIs('tenants.*') ? 'active ' : '' }}">
-                    <span class="menu-title">Manajemen Tenant</span>
-                </a>
-            </div>
-
-            {{-- AKUN DEMO: Superadmin only --}}
-            <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('demo-accounts.*') ? 'here show ' : '' }}">
-                <a href="{{ route('demo-accounts.index') }}"
-                    class="menu-link px-4 {{ request()->routeIs('demo-accounts.*') ? 'active ' : '' }}">
-                    <span class="menu-title">Akun Demo</span>
-                </a>
-            </div>
-
-            {{-- PAYMENT (dropdown): Setelan Deposit + Channel VA DOKU — Superadmin only --}}
+            {{-- PAYMENT (dropdown): Payment Gateway + Channel Tripay (relevan event) --}}
             @php($payActive = request()->routeIs('payment-gateway.*') || request()->routeIs('deposit-settings.*') || request()->routeIs('doku-channels.*') || request()->routeIs('tripay-channels.*'))
             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
                 class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention menu-here-bg me-0 me-lg-2 {{ $payActive ? 'here show ' : '' }}">
@@ -319,13 +303,7 @@
             </div>
         @endif
 
-        {{-- APLIKASI TABLET (semua user login) --}}
-        <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('download-app') ? 'here show ' : '' }}">
-            <a href="{{ route('download-app') }}"
-                class="menu-link px-4 {{ request()->routeIs('download-app') ? 'active ' : '' }}">
-                <span class="menu-title">Aplikasi</span>
-            </a>
-        </div>
+        {{-- APLIKASI TABLET POS (disembunyikan di event-mooda) --}}
 
         {{-- HELP: Superadmin + admin + owner (yang punya view_help) --}}
         @can('view_help')
@@ -349,8 +327,8 @@
             </div>
         @endcan
 
-        {{-- TOGGLE MODE (Superadmin): Analitik <-> Kasir + pemilih toko utk mode POS --}}
-        @if ($isSuperadminView ?? false)
+        {{-- TOGGLE MODE POS (disembunyikan di event-mooda) --}}
+        @if (false)
             <div class="menu-item d-flex align-items-center ms-lg-2 my-2 my-lg-0 gap-2 flex-wrap">
                 @if (($saMode ?? 'analytics') === 'pos' && !empty($saTenants) && count($saTenants))
                     <div class="dropdown">
