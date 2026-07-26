@@ -406,7 +406,7 @@
                                     <small>Mulai dari</small>
                                     <b class="{{ $price <= 0 ? 'grad-text' : '' }}">{{ $rupiah($price) }}</b>
                                 </div>
-                                <a href="{{ route('register') }}" class="btn btn-grad btn-sm">Beli Tiket</a>
+                                <a href="{{ route('event.show', $e->slug) }}" class="btn btn-grad btn-sm">Beli Tiket</a>
                             </div>
                         </div>
                     </article>

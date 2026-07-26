@@ -178,6 +178,20 @@ class Tripay
         return ($res['body'] ?: []) + ['_http_status' => $res['status']];
     }
 
+    /**
+     * Detail transaksi (untuk polling status pembayaran tiket event — tanpa callback).
+     * body.data.status: UNPAID | PAID | EXPIRED | FAILED | REFUND.
+     */
+    public function transactionDetail(string $reference): array
+    {
+        if (! $this->isConfigured() || $reference === '') {
+            return ['_http_status' => 0];
+        }
+        $res = $this->httpGet(self::DETAIL_PATH . '?reference=' . urlencode($reference));
+
+        return ($res['body'] ?: []) + ['_http_status' => $res['status']];
+    }
+
     /* ===================== HTTP ===================== */
 
     private function httpGet(string $path): array

@@ -49,6 +49,9 @@ use App\Http\Controllers\Backend\Superadmin\ProvinceController;
 use App\Http\Controllers\Backend\Superadmin\CityController;
 use App\Http\Controllers\Backend\Organizer\EventController as OrganizerEventController;
 use App\Http\Controllers\Backend\Organizer\TicketTypeController as OrganizerTicketTypeController;
+use App\Http\Controllers\PublicEventController;
+use App\Http\Controllers\CheckoutController as TicketCheckoutController;
+use App\Http\Controllers\MyTicketController;
 use App\Http\Controllers\Backend\Superadmin\MaintenanceController;
 
 /*
@@ -94,6 +97,9 @@ Route::get('/', function () {
 // verifikasi merchant pembayaran. Checkout sebenarnya ada di /admin/deposit (perlu login).
 Route::get('/checkout-demo', fn () => view('checkout-demo'))->name('checkout-demo');
 
+// Halaman publik detail event (dari landing → klik event)
+Route::get('/event/{slug}', [PublicEventController::class, 'show'])->name('event.show');
+
 // SEO: sitemap.xml (dinamis — domain mengikuti APP_URL). Dirujuk di robots.txt.
 Route::get('/sitemap.xml', function () {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
@@ -134,6 +140,15 @@ Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->gr
         Route::put('/events/{event}/tickets/{ticketType}', [OrganizerTicketTypeController::class, 'update'])->name('tickets.update');
         Route::delete('/events/{event}/tickets/{ticketType}', [OrganizerTicketTypeController::class, 'destroy'])->name('tickets.destroy');
     });
+
+    // --- CHECKOUT TIKET & TIKET SAYA (pembeli login) — Tripay prefix TIX-, konfirmasi via polling ---
+    Route::post('/checkout/order/{event}', [TicketCheckoutController::class, 'order'])->name('checkout.order');
+    Route::get('/checkout/{order}', [TicketCheckoutController::class, 'show'])->name('checkout.show');
+    Route::post('/checkout/{order}/pay', [TicketCheckoutController::class, 'pay'])->name('checkout.pay');
+    Route::get('/checkout/{order}/payment', [TicketCheckoutController::class, 'payment'])->name('checkout.payment');
+    Route::get('/checkout/{order}/status', [TicketCheckoutController::class, 'status'])->name('checkout.status');
+    Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
+    Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
 
     // --- MY ACCOUNT / PROFILE (accessible by ALL authenticated users) ---
     Route::get('/admin/my-account', [AccountController::class, 'index'])->name('account.index');

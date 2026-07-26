@@ -7,15 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 class TicketOrder extends Model
 {
     protected $fillable = [
-        'invoice_no', 'event_id', 'buyer_id', 'affiliate_id', 'reseller_id',
+        'invoice_no', 'event_id', 'buyer_id', 'affiliate_id', 'reseller_id', 'items',
         'buyer_name', 'buyer_email', 'buyer_phone', 'subtotal', 'service_fee', 'total',
-        'status', 'payment_method', 'payment_ref', 'paid_at', 'expired_at',
+        'status', 'payment_method', 'payment_ref', 'payment_payload', 'paid_at', 'expired_at',
     ];
 
     protected $casts = [
-        'paid_at'    => 'datetime',
-        'expired_at' => 'datetime',
+        'paid_at'          => 'datetime',
+        'expired_at'       => 'datetime',
+        'items'            => 'array',
+        'payment_payload'  => 'array',
     ];
+
+    /** Prefix invoice tiket event (beda dari POS 'MDA-INV-') untuk pemisahan log Tripay. */
+    public static function generateInvoiceNo(): string
+    {
+        do {
+            $inv = 'TIX-' . now()->format('YmdHis') . '-' . strtoupper(\Illuminate\Support\Str::random(5));
+        } while (static::where('invoice_no', $inv)->exists());
+
+        return $inv;
+    }
 
     public function event()
     {
