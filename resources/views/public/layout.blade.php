@@ -18,12 +18,12 @@
     <style>
         :root {
             --bg:#fff; --bg-soft:#f5f6fb; --card:#fff; --text:#0d0f1c; --muted:#5a6079; --border:#e7e9f4;
-            --brand:#7c3aed; --grad:linear-gradient(120deg,#7c3aed 0%,#ec4899 55%,#f97316 100%);
-            --shadow:0 18px 50px -22px rgba(24,15,55,.28); --nav-bg:rgba(255,255,255,.82);
+            --brand:#e11d2a; --grad:linear-gradient(120deg,#ff2d3f 0%,#e11d2a 55%,#a10e1a 100%);
+            --shadow:0 18px 50px -22px rgba(120,8,15,.30); --nav-bg:rgba(255,255,255,.86);
         }
         html[data-theme="dark"] {
-            --bg:#08090f; --bg-soft:#0c0e18; --card:#12141f; --text:#f3f4fb; --muted:#9aa0bb; --border:#23263a;
-            --shadow:0 22px 60px -20px rgba(0,0,0,.7); --nav-bg:rgba(8,9,15,.75);
+            --bg:#0a0a0a; --bg-soft:#121212; --card:#181818; --text:#f5f5f5; --muted:#a0a0a0; --border:#2a2a2a;
+            --shadow:0 22px 60px -20px rgba(0,0,0,.85); --nav-bg:rgba(10,10,10,.8);
         }
         * { box-sizing:border-box; margin:0; padding:0; }
         html { scroll-behavior:smooth; }
@@ -34,7 +34,7 @@
         .wrap { width:100%; max-width:1100px; margin:0 auto; padding:0 24px; }
         .grad-text { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
         .btn { display:inline-flex; align-items:center; gap:8px; border:0; cursor:pointer; font-family:'Sora',sans-serif; font-weight:700; font-size:15px; padding:13px 24px; border-radius:14px; transition:transform .15s,box-shadow .2s; white-space:nowrap; }
-        .btn-grad { background:var(--grad); color:#fff; box-shadow:0 10px 30px -10px rgba(124,58,237,.6); }
+        .btn-grad { background:var(--grad); color:#fff; box-shadow:0 10px 30px -10px rgba(225,29,42,.6); }
         .btn-grad:hover { transform:translateY(-2px); }
         .btn-ghost { background:transparent; color:var(--text); border:1.5px solid var(--border); }
         .btn-ghost:hover { border-color:var(--brand); color:var(--brand); }
@@ -45,7 +45,7 @@
         .nav { position:sticky; top:0; z-index:50; background:var(--nav-bg); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
         .nav-in { display:flex; align-items:center; gap:16px; height:68px; }
         .brand { display:flex; align-items:center; gap:10px; font-family:'Sora'; font-weight:800; font-size:20px; }
-        .brand .logo { width:38px; height:38px; border-radius:11px; background:var(--grad); display:grid; place-items:center; color:#fff; box-shadow:0 8px 20px -6px rgba(124,58,237,.65); }
+        .brand .logo { width:38px; height:38px; border-radius:11px; background:var(--grad); display:grid; place-items:center; color:#fff; box-shadow:0 8px 20px -6px rgba(225,29,42,.65); }
         .nav-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
         .icon-btn { width:40px; height:40px; border-radius:11px; border:1.5px solid var(--border); background:var(--card); color:var(--text); display:grid; place-items:center; cursor:pointer; }
         .icon-btn:hover { border-color:var(--brand); }

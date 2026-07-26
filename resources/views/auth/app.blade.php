@@ -77,15 +77,15 @@ License: Proprietary - Mooda System
         <style>
             body {
                 background:
-                    radial-gradient(1100px 550px at 100% 0%, #eef2ff 0%, rgba(238, 242, 255, 0) 60%),
-                    radial-gradient(900px 500px at 0% 100%, #f5f3ff 0%, rgba(245, 243, 255, 0) 55%),
-                    #fbfbff;
+                    radial-gradient(1100px 550px at 100% 0%, #fdeaec 0%, rgba(253, 234, 236, 0) 60%),
+                    radial-gradient(900px 500px at 0% 100%, #fff5f5 0%, rgba(255, 245, 245, 0) 55%),
+                    #ffffff;
             }
 
             [data-bs-theme="dark"] body {
                 background:
-                    radial-gradient(1100px 550px at 100% 0%, #1e1b3a 0%, rgba(30, 27, 58, 0) 60%),
-                    #0f0f1a;
+                    radial-gradient(1100px 550px at 100% 0%, #2a0a0d 0%, rgba(42, 10, 13, 0) 60%),
+                    #0a0a0a;
             }
         </style>
         <!--end::Page bg image-->
@@ -99,25 +99,18 @@ License: Proprietary - Mooda System
                 <!--begin::Content-->
                 <div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
                     <!--begin::Image-->
-                    <img class="theme-light-show mx-auto mw-100 w-150px w-lg-300px mb-10 mb-lg-20"
-                        src="{{ asset('assets/media/logos/mooda-logo.png') }}" alt="Mooda" />
-
-                    <img class="theme-dark-show mx-auto mw-100 w-150px w-lg-300px mb-10 mb-lg-20"
-                        src="{{ asset('assets/media/logos/mooda-logo-white.png') }}" alt="Mooda" />
-
+                    <div class="mx-auto mb-10 mb-lg-20 d-grid rounded-4" style="width:130px;height:130px;place-items:center;background:linear-gradient(135deg,#ff2d3f,#a10e1a);box-shadow:0 30px 60px -20px rgba(225,29,42,.6);">
+                        <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+                    </div>
                     <!--end::Image-->
-                    <!--begin::Title-->
-                    <!-- <h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7">Fast, Efficient and Productive</h1> -->
-                    <!--end::Title-->
-                    <!--begin::Text-->
                     <h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7">
-                        Mooda <br> Restaurant POS System
+                        Event <span style="color:#e11d2a">Mooda</span> <br> Platform Tiket Event
                     </h1>
                     <div class="text-gray-600 fs-base text-center fw-semibold">
-                        Aplikasi Point of Sale cerdas untuk membantu restoran Anda dalam mengelola pesanan,
-                        manajemen meja, dan mempercepat pelayanan dapur.
+                        Temukan & beli tiket event favoritmu, atau jual tiket acaramu sendiri —
+                        konser, festival, seminar, hingga workshop.
                         <br /><br />
-                        <span class="badge badge-light-primary fs-7 fw-bold">Mooda Teknologi Indonesia</span>
+                        <span class="badge badge-light-danger fs-7 fw-bold">Mooda Teknologi Indonesia</span>
                     </div>
                     <!--end::Text-->
                 </div>

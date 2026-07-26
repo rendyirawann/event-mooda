@@ -29,16 +29,16 @@
         :root {
             --bg: #ffffff; --bg-soft: #f5f6fb; --card: #ffffff; --card-2: #fbfbfe;
             --text: #0d0f1c; --muted: #5a6079; --border: #e7e9f4; --border-2: #eef0f8;
-            --brand: #7c3aed; --brand-2: #ec4899; --accent: #f97316;
-            --grad: linear-gradient(120deg, #7c3aed 0%, #ec4899 55%, #f97316 100%);
-            --shadow: 0 18px 50px -22px rgba(24, 15, 55, .28);
-            --nav-bg: rgba(255,255,255,.82);
+            --brand: #e11d2a; --brand-2: #ff3b3b; --accent: #b3121f;
+            --grad: linear-gradient(120deg, #ff2d3f 0%, #e11d2a 55%, #a10e1a 100%);
+            --shadow: 0 18px 50px -22px rgba(120, 8, 15, .30);
+            --nav-bg: rgba(255,255,255,.86);
         }
         html[data-theme="dark"] {
-            --bg: #08090f; --bg-soft: #0c0e18; --card: #12141f; --card-2: #171a28;
-            --text: #f3f4fb; --muted: #9aa0bb; --border: #23263a; --border-2: #1b1e2e;
-            --shadow: 0 22px 60px -20px rgba(0,0,0,.7);
-            --nav-bg: rgba(8,9,15,.75);
+            --bg: #0a0a0a; --bg-soft: #121212; --card: #181818; --card-2: #1f1f1f;
+            --text: #f5f5f5; --muted: #a0a0a0; --border: #2a2a2a; --border-2: #202020;
+            --shadow: 0 22px 60px -20px rgba(0,0,0,.85);
+            --nav-bg: rgba(10,10,10,.8);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -59,8 +59,8 @@
             padding: 13px 24px; border-radius: 14px; transition: transform .15s, box-shadow .2s, background .2s;
             white-space: nowrap;
         }
-        .btn-grad { background: var(--grad); color: #fff; box-shadow: 0 10px 30px -10px rgba(124,58,237,.6); }
-        .btn-grad:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -10px rgba(236,72,153,.6); }
+        .btn-grad { background: var(--grad); color: #fff; box-shadow: 0 10px 30px -10px rgba(225,29,42,.6); }
+        .btn-grad:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -10px rgba(255,59,59,.6); }
         .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
         .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
         .btn-sm { padding: 10px 18px; font-size: 14px; border-radius: 11px; }
@@ -76,7 +76,7 @@
         .brand .logo {
             width: 40px; height: 40px; border-radius: 12px; background: var(--grad);
             display: grid; place-items: center; color: #fff; flex: 0 0 auto;
-            box-shadow: 0 8px 20px -6px rgba(124,58,237,.65);
+            box-shadow: 0 8px 20px -6px rgba(225,29,42,.65);
         }
         .nav-links { display: flex; align-items: center; gap: 30px; margin-left: 18px; }
         .nav-links a { font-weight: 600; font-size: 15px; color: var(--muted); transition: color .15s; }
@@ -97,9 +97,9 @@
         .hero::before {
             content: ''; position: absolute; inset: 0; z-index: 0;
             background:
-                radial-gradient(760px 420px at 82% -8%, rgba(236,72,153,.28), transparent 60%),
-                radial-gradient(680px 460px at 6% 12%, rgba(124,58,237,.30), transparent 58%),
-                radial-gradient(600px 400px at 60% 108%, rgba(249,115,22,.20), transparent 60%);
+                radial-gradient(760px 420px at 82% -8%, rgba(255,59,59,.28), transparent 60%),
+                radial-gradient(680px 460px at 6% 12%, rgba(225,29,42,.30), transparent 58%),
+                radial-gradient(600px 400px at 60% 108%, rgba(163,18,31,.20), transparent 60%);
         }
         .hero-in { position: relative; z-index: 1; text-align: center; }
         .pill {
@@ -189,7 +189,7 @@
         .feat p { color: var(--muted); font-size: 14.5px; }
         .why-card {
             background: var(--grad); border-radius: 26px; padding: 44px 38px; color: #fff; position: relative; overflow: hidden;
-            box-shadow: 0 30px 70px -30px rgba(124,58,237,.7);
+            box-shadow: 0 30px 70px -30px rgba(225,29,42,.7);
         }
         .why-card::before { content: ''; position: absolute; width: 260px; height: 260px; right: -60px; top: -60px; border-radius: 50%; background: rgba(255,255,255,.14); }
         .why-card h3 { font-size: 30px; font-weight: 800; margin-bottom: 14px; position: relative; }
@@ -208,7 +208,7 @@
 
         /* CTA band */
         .cta { text-align: center; }
-        .cta-box { background: var(--grad); border-radius: 30px; padding: 66px 32px; color: #fff; position: relative; overflow: hidden; box-shadow: 0 30px 70px -30px rgba(236,72,153,.6); }
+        .cta-box { background: var(--grad); border-radius: 30px; padding: 66px 32px; color: #fff; position: relative; overflow: hidden; box-shadow: 0 30px 70px -30px rgba(255,59,59,.6); }
         .cta-box::before, .cta-box::after { content:''; position:absolute; border-radius:50%; background:rgba(255,255,255,.12); }
         .cta-box::before { width: 300px; height: 300px; left: -80px; bottom: -120px; }
         .cta-box::after { width: 220px; height: 220px; right: -60px; top: -90px; }

@@ -142,11 +142,13 @@
             <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
 
                 <div class="d-flex flex-center flex-column flex-column-fluid mb-2">
-                    <img alt="Mooda" class="theme-light-show h-40px h-lg-60px"
-                        src="{{ asset('assets/media/logos/mooda-logo.png') }}" />
-                    <img alt="Mooda" class="theme-dark-show h-40px h-lg-60px"
-                        src="{{ asset('assets/media/logos/mooda-logo-white.png') }}" />
-                    <div class="text-muted fw-semibold fs-6 mt-4">Masuk untuk mengelola restoran Anda</div>
+                    <div class="d-flex align-items-center gap-3 mb-1">
+                        <span class="d-grid rounded" style="width:48px;height:48px;place-items:center;background:linear-gradient(135deg,#ff2d3f,#a10e1a);color:#fff;box-shadow:0 8px 20px -6px rgba(225,29,42,.6);">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+                        </span>
+                        <span class="fs-1 fw-bolder text-gray-900">Event<span style="color:#e11d2a">Mooda</span></span>
+                    </div>
+                    <div class="text-muted fw-semibold fs-6 mt-3">Masuk untuk kelola event & tiketmu</div>
                 </div>
 
                 <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20 my-12">
@@ -202,44 +204,8 @@
                         </div> -->
                     </form>
 
-                    {{-- ===== AKUN DEMO ===== --}}
-                    @php
-                        $demoAccounts = [
-                            ['Owner', 'owner@demo.test', 'owner12345', 'Akses penuh (pemilik)', 'primary'],
-                            ['Admin', 'admin@demo.test', 'admin12345', 'Kelola operasional', 'info'],
-                            ['Kasir', 'kasir@demo.test', 'kasir12345', 'Transaksi & laporan', 'success'],
-                            ['Kitchen', 'kitchen@demo.test', 'kitchen12345', 'Layar dapur', 'warning'],
-                        ];
-                    @endphp
-                    <div class="separator separator-content my-2 text-muted fw-bold fs-7">AKUN DEMO</div>
-
-                    <div class="bg-light-primary rounded-3 p-4 mt-6 w-100">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="ki-outline ki-rocket fs-2 text-primary me-2"></i>
-                            <span class="fw-bold text-gray-800">Coba demo tanpa daftar</span>
-                        </div>
-
-                        <div class="d-flex flex-column gap-2">
-                            @foreach ($demoAccounts as [$role, $email, $pass, $desc, $color])
-                                <div class="d-flex align-items-center justify-content-between bg-body rounded-2 px-3 py-2">
-                                    <div class="me-2">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="badge badge-light-{{ $color }} fw-bold">{{ $role }}</span>
-                                            <span class="fs-8 text-muted">{{ $desc }}</span>
-                                        </div>
-                                        <div class="fs-8 text-gray-700 mt-1">
-                                            <i class="ki-outline ki-sms fs-8 me-1"></i>{{ $email }}
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-sm btn-{{ $color }} flex-shrink-0"
-                                        onclick="if(typeof demoLogin==='function')demoLogin('{{ $email }}', '{{ $pass }}')">Masuk</button>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="fs-8 text-muted mt-3">
-                            Memakai tenant <span class="fw-semibold">"Demo Resto"</span> yang sudah aktif — semua fitur bisa dicoba.
-                        </div>
+                    <div class="text-gray-500 text-center fw-semibold fs-6">Belum punya akun?
+                        <a href="{{ route('register') }}" class="link-danger fw-bold">Daftar Gratis</a>
                     </div>
 
                 </div>
