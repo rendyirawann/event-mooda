@@ -9,7 +9,12 @@
             <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-100 w-md-450px">
 
                 <div class="d-flex flex-center flex-column flex-column-fluid mb-2">
-                    <img alt="Logo" class="h-40px h-lg-90px" src="{{ asset('assets/media/logos/mooda-logo.png') }}" />
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="d-grid rounded" style="width:46px;height:46px;place-items:center;background:linear-gradient(135deg,#ff2d3f,#a10e1a);color:#fff;box-shadow:0 8px 20px -6px rgba(225,29,42,.6);">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+                        </span>
+                        <span class="fs-1 fw-bolder text-gray-900">Event<span style="color:#e11d2a">Mooda</span></span>
+                    </div>
                 </div>
 
                 <div class="d-flex flex-center flex-column flex-column-fluid py-6">
@@ -18,8 +23,8 @@
                         @csrf
 
                         <div class="text-center mb-6">
-                            <h1 class="text-gray-900 fw-bolder mb-2">Daftar Akun Bisnis</h1>
-                            <div class="text-gray-500 fw-semibold fs-6">Buat akun & data bisnis Anda. Aktifkan langganan untuk mulai memakai sistem.</div>
+                            <h1 class="text-gray-900 fw-bolder mb-2">Daftar ke Event Mooda</h1>
+                            <div class="text-gray-500 fw-semibold fs-6">Buat akun gratis untuk beli tiket, atau jual tiket eventmu.</div>
                         </div>
 
                         @if ($errors->any())
@@ -36,42 +41,22 @@
                             </div>
                         @endif
 
-                        {{-- Nama Bisnis --}}
+                        {{-- Daftar sebagai --}}
                         <div class="fv-row mb-4">
-                            <label class="form-label fw-semibold required">Nama Bisnis / Restoran</label>
-                            <input type="text" name="business_name" value="{{ old('business_name') }}"
-                                class="form-control bg-transparent" placeholder="cth: Warung Sederhana" />
-                            @error('business_name')<div class="text-danger fs-7 mt-1">{{ $message }}</div>@enderror
-                        </div>
-
-                        {{-- Kategori Usaha (menentukan sistem kas: Resto/Cafe = Shift, UMKM = Kas Harian) --}}
-                        <div class="fv-row mb-4">
-                            <label class="form-label fw-semibold required">Kategori Usaha</label>
+                            <label class="form-label fw-semibold required">Daftar sebagai</label>
                             <div class="d-flex gap-2">
-                                @php $curCat = old('category', 'resto'); @endphp
-                                @foreach (['resto' => 'Resto', 'cafe' => 'Cafe', 'umkm' => 'UMKM'] as $val => $label)
-                                    <input type="radio" class="btn-check" name="category" value="{{ $val }}" id="cat-{{ $val }}" @checked($curCat === $val)>
-                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary flex-fill py-3 fw-bold" for="cat-{{ $val }}">{{ $label }}</label>
-                                @endforeach
+                                @php $curRole = old('role', 'buyer'); @endphp
+                                <input type="radio" class="btn-check" name="role" value="buyer" id="role-buyer" @checked($curRole === 'buyer')>
+                                <label class="btn btn-outline btn-outline-dashed btn-active-light-danger flex-fill py-3 fw-bold" for="role-buyer">🎟️ Pembeli Tiket</label>
+                                <input type="radio" class="btn-check" name="role" value="organizer" id="role-organizer" @checked($curRole === 'organizer')>
+                                <label class="btn btn-outline btn-outline-dashed btn-active-light-danger flex-fill py-3 fw-bold" for="role-organizer">🎪 Penyelenggara</label>
                             </div>
-                            <div class="form-text">Resto &amp; Cafe pakai Shift kasir; UMKM pakai Kas Harian (lebih simpel).</div>
-                            @error('category')<div class="text-danger fs-7 mt-1">{{ $message }}</div>@enderror
+                            <div class="form-text">Pembeli: beli tiket event. Penyelenggara: buat & jual tiket eventmu.</div>
                         </div>
 
-                        {{-- Jenis Bisnis --}}
+                        {{-- Nama Lengkap --}}
                         <div class="fv-row mb-4">
-                            <label class="form-label fw-semibold">Jenis Bisnis</label>
-                            <select name="business_type" class="form-select bg-transparent">
-                                @foreach (['Restoran', 'Cafe', 'Warung', 'Bakery', 'Bar', 'Catering', 'Lainnya'] as $type)
-                                    <option value="{{ $type }}" @selected(old('business_type') === $type)>{{ $type }}</option>
-                                @endforeach
-                            </select>
-                            @error('business_type')<div class="text-danger fs-7 mt-1">{{ $message }}</div>@enderror
-                        </div>
-
-                        {{-- Nama Pemilik --}}
-                        <div class="fv-row mb-4">
-                            <label class="form-label fw-semibold required">Nama Pemilik</label>
+                            <label class="form-label fw-semibold required">Nama Lengkap</label>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="form-control bg-transparent" placeholder="Nama lengkap Anda" />
                             @error('name')<div class="text-danger fs-7 mt-1">{{ $message }}</div>@enderror
@@ -113,24 +98,16 @@
                                 class="form-control bg-transparent" placeholder="Ulangi password" />
                         </div>
 
-                        {{-- Kode Referral (opsional) — terisi otomatis dari link referral, atau isi manual --}}
-                        <div class="fv-row mb-6">
-                            <label class="form-label fw-semibold">Kode Referral <span class="text-muted fw-normal">(opsional)</span></label>
-                            <input type="text" name="ref" value="{{ old('ref', $ref ?? '') }}"
-                                class="form-control bg-transparent text-uppercase" placeholder="cth: RENDYENKW" style="text-transform:uppercase" />
-                            <div class="form-text">Punya kode dari teman/affiliate? Isi di sini. Otomatis terisi bila Anda datang lewat link referral.</div>
-                        </div>
-
                         <div class="d-grid mb-6">
-                            <button type="submit" class="btn btn-primary" id="regSubmitBtn">
-                                <span class="reg-idle">Daftar &amp; Lanjut Bayar</span>
+                            <button type="submit" class="btn btn-danger" id="regSubmitBtn">
+                                <span class="reg-idle">Daftar Gratis</span>
                                 <span class="reg-loading d-none"><span class="spinner-border spinner-border-sm align-middle me-2"></span>Memproses…</span>
                             </button>
                         </div>
 
                         <div class="text-gray-500 text-center fw-semibold fs-6">
                             Sudah punya akun?
-                            <a href="{{ route('login') }}" class="link-primary">Masuk</a>
+                            <a href="{{ route('login') }}" class="link-danger">Masuk</a>
                         </div>
                     </form>
 

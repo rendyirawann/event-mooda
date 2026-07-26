@@ -57,6 +57,7 @@ use App\Http\Controllers\PublicEventController;
 use App\Http\Controllers\CheckoutController as TicketCheckoutController;
 use App\Http\Controllers\MyTicketController;
 use App\Http\Controllers\Backend\ReferralController;
+use App\Http\Controllers\Backend\EventDashboardController;
 use App\Http\Controllers\Backend\Superadmin\MaintenanceController;
 
 /*
@@ -127,7 +128,7 @@ Route::get('/sitemap.xml', function () {
 Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->group(function () {
 
     // --- DASHBOARD (accessible by ALL authenticated roles) ---
-    Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');
+    Route::get('/admin/dashboard', [EventDashboardController::class, 'index'])->name('dashboard');
     // Tampil/sembunyi panduan "Setup Awal" di dashboard (preferensi per-tenant)
     Route::post('/admin/dashboard/onboarding-toggle', [DashboardAdminController::class, 'toggleOnboarding'])->name('dashboard.onboarding-toggle');
     // Toggle mode tampilan Superadmin: analytics (platform) <-> pos (kasir)

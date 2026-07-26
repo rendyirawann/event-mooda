@@ -37,15 +37,11 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'business_name' => ['required', 'string', 'max:255'],
-            'business_type' => ['nullable', 'string', 'max:100'],
-            'category'      => ['nullable', 'in:resto,cafe,umkm'],
             'name'          => ['required', 'string', 'max:255'],
             'phone'         => ['nullable', 'string', 'max:30'],
+            'role'          => ['nullable', 'in:buyer,organizer'],
             'email'         => [
                 'required', 'string', 'lowercase', 'email:rfc', 'max:255',
-                // Anti-inject + rapi: hanya huruf/angka dengan pemisah tunggal titik/strip/underscore
-                // (tanpa simbol lain, tanpa titik berurutan, tanpa titik di awal/akhir).
                 'regex:/^[a-z0-9]+([._-][a-z0-9]+)*@[a-z0-9]+([.-][a-z0-9]+)*\.[a-z]{2,}$/',
                 'unique:' . User::class,
                 function ($attribute, $value, $fail) {
@@ -56,27 +52,14 @@ class RegisteredUserController extends Controller
             ],
             'password'      => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'email.regex' => 'Format email tidak valid. Gunakan huruf/angka dengan pemisah titik/strip/underscore tunggal, tanpa simbol lain.',
+            'email.regex' => 'Format email tidak valid.',
         ]);
 
-        $user = DB::transaction(function () use ($request) {
-            $categoryLabels = ['resto' => 'Restoran', 'cafe' => 'Cafe', 'umkm' => 'UMKM'];
-            $tenant = Tenant::create([
-                'name'                => $request->business_name,
-                'slug'                => $this->uniqueSlug($request->business_name),
-                'business_type'       => $request->business_type ?: ($categoryLabels[$request->category] ?? null),
-                'category'            => $request->category,
-                'phone'               => $request->phone,
-                'email'               => $request->email,
-                // Terkunci sampai berlangganan (sesuai kebutuhan: wajib langganan dulu)
-                'subscription_status' => 'inactive',
-                'plan'                => null,
-                'trial_ends_at'       => null,
-                'is_active'           => true,
-            ]);
+        // Event Mooda: daftar sebagai Pembeli (default) atau Penyelenggara — TANPA tenant/bisnis.
+        $role = in_array($request->role, ['buyer', 'organizer'], true) ? $request->role : 'buyer';
 
+        $user = DB::transaction(function () use ($request, $role) {
             $user = User::create([
-                'tenant_id' => $tenant->id,
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'username'  => $this->uniqueUsername($request->email),
@@ -85,24 +68,16 @@ class RegisteredUserController extends Controller
                 'password'  => Hash::make($request->password),
                 'is_active' => true,
             ]);
-
-            $user->assignRole('owner');
-            $tenant->update(['owner_id' => $user->id]);
-
-            // Catat referral bila tenant daftar lewat kode afiliator (cookie mooda_ref).
-            $this->attachReferral($tenant, $request);
+            $user->assignRole($role);
 
             return $user;
         });
 
-        // Kirim email verifikasi (link aktivasi) versi branded — dikirim eksplisit (anti dobel).
         $user->sendEmailVerificationNotification();
-
         Auth::login($user);
 
-        // Wajib aktivasi via link email dulu. Setelah aktif: otomatis jadi Starter + saldo Rp2.000.
         return redirect()->route('verification.notice')
-            ->with('status', 'Akun berhasil dibuat! Kami sudah mengirim link aktivasi ke email Anda (' . $user->email . '). Klik link tersebut untuk mengaktifkan akun & dapat saldo Starter Rp2.000.');
+            ->with('status', 'Akun berhasil dibuat! Kami mengirim link aktivasi ke email Anda (' . $user->email . '). Klik link tersebut untuk mengaktifkan akun.');
     }
 
     /** Catat pemakaian kode referral (cookie mooda_ref) oleh tenant yang baru daftar. */
