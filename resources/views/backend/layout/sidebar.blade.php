@@ -8,7 +8,7 @@
             <span class="d-grid rounded flex-shrink-0" style="width:42px;height:42px;place-items:center;background:linear-gradient(135deg,#ff2d3f,#a10e1a);color:#fff;box-shadow:0 8px 18px -6px rgba(225,29,42,.6)">
                 <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
             </span>
-            <span style="font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:21px;color:var(--bs-gray-900)">Event<span style="color:#e11d2a">Mooda</span></span>
+            <span style="font-family:'Plus Jakarta Sans',Georgia,serif;font-weight:900;font-size:21px;color:var(--bs-gray-900)">Event<span style="color:#e11d2a">Mooda</span></span>
         </a>
     </div>
     <div class="separator mx-6"></div>
