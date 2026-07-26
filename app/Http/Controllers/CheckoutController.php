@@ -62,7 +62,7 @@ class CheckoutController extends Controller
             'total'       => $subtotal,
             'status'      => 'pending',
             'expired_at'  => now()->addHours(24),
-        ]);
+        ] + $this->resolveReferral($user));
 
         return redirect()->route('checkout.show', $order);
     }
@@ -199,7 +199,52 @@ class CheckoutController extends Controller
                 $tt->increment('sold', (int) $it['qty']);
             }
             $fresh->update(['status' => 'paid', 'paid_at' => now()]);
+            $this->recordCommission($fresh);
         });
+    }
+
+    /** Resolusi referrer (affiliate/reseller) dari session ?ref → kolom order. */
+    private function resolveReferral($buyer): array
+    {
+        $code = session('ref_code');
+        if (! $code) {
+            return [];
+        }
+        $ref = \App\Models\User::where('referral_code', $code)->first();
+        if (! $ref || $ref->id === $buyer->id) {
+            return [];
+        }
+        if ($ref->hasRole('affiliate')) {
+            return ['affiliate_id' => $ref->id];
+        }
+        if ($ref->hasRole('reseller')) {
+            return ['reseller_id' => $ref->id];
+        }
+
+        return [];
+    }
+
+    /** Catat komisi (pending) untuk affiliate/reseller saat order lunas (idempotent). */
+    private function recordCommission(TicketOrder $order): void
+    {
+        $refId = $order->affiliate_id ?: $order->reseller_id;
+        $role  = $order->affiliate_id ? 'affiliate' : ($order->reseller_id ? 'reseller' : null);
+        if (! $refId || ! $role || (int) $order->total <= 0) {
+            return;
+        }
+        if (\App\Models\Commission::where('ticket_order_id', $order->id)->exists()) {
+            return;
+        }
+        $rate = $role === 'affiliate' ? 10.0 : 15.0;
+        \App\Models\Commission::create([
+            'ticket_order_id' => $order->id,
+            'user_id'         => $refId,
+            'role'            => $role,
+            'base_amount'     => (int) $order->total,
+            'rate'            => $rate,
+            'amount'          => (int) round($order->total * $rate / 100),
+            'status'          => 'pending',
+        ]);
     }
 
     private function ticketCode(): string

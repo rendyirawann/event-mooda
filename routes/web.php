@@ -54,6 +54,7 @@ use App\Http\Controllers\Backend\Organizer\CheckInController;
 use App\Http\Controllers\PublicEventController;
 use App\Http\Controllers\CheckoutController as TicketCheckoutController;
 use App\Http\Controllers\MyTicketController;
+use App\Http\Controllers\Backend\ReferralController;
 use App\Http\Controllers\Backend\Superadmin\MaintenanceController;
 
 /*
@@ -84,7 +85,10 @@ Route::middleware(['auth', 'forbid-banned-user', 'can:affiliate.refer'])->group(
 });
 
 // Halaman Depan: Landing Page platform tiket event (Event Mooda) — data nyata dari DB.
-Route::get('/', function () {
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    if ($ref = $request->query('ref')) {
+        session(['ref_code' => substr((string) $ref, 0, 20)]);
+    }
     return view('landing', [
         'categories' => \App\Models\EventCategory::active()->ordered()->get(),
         'cities'     => \App\Models\City::featured()
@@ -154,6 +158,9 @@ Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->gr
     Route::get('/checkout/{order}/status', [TicketCheckoutController::class, 'status'])->name('checkout.status');
     Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
     Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
+
+    // Program referral & komisi (affiliate / reseller)
+    Route::get('/referral', [ReferralController::class, 'index'])->name('referral.index');
 
     // --- MY ACCOUNT / PROFILE (accessible by ALL authenticated users) ---
     Route::get('/admin/my-account', [AccountController::class, 'index'])->name('account.index');

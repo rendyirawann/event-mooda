@@ -28,6 +28,7 @@ class User extends Authenticatable implements BannableContract, MustVerifyEmail
         'tenant_id',
         'name',
         'username',
+        'referral_code',
         'email',
         'no_wa',
         'avatar',

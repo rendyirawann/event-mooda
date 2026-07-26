@@ -30,6 +30,14 @@
                 </a>
             </div>
         @endcan
+        {{-- PROGRAM REFERRAL (affiliate / reseller) --}}
+        @if (auth()->user()?->hasRole('affiliate') || auth()->user()?->hasRole('reseller') || auth()->user()?->isSuperadmin())
+            <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('referral.*') ? 'here show ' : '' }}">
+                <a href="{{ route('referral.index') }}" class="menu-link px-4 {{ request()->routeIs('referral.*') ? 'active ' : '' }}">
+                    <span class="menu-title">Program Referral</span>
+                </a>
+            </div>
+        @endif
         {{-- DATA MASTER (disembunyikan utk Superadmin di mode Analitik) --}}
         @if (! ($isSuperadminView ?? false) || ($saMode ?? 'pos') === 'pos')
         @can('view_data_master')
