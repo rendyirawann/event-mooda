@@ -10,7 +10,7 @@
     <p class="muted" style="margin-bottom:20px">Invoice {{ $order->invoice_no }}</p>
     <div class="card" style="padding:28px">
         <div class="muted" style="font-size:13px">Total Bayar</div>
-        <div style="font-family:'Sora';font-weight:800;font-size:30px;margin-bottom:4px">Rp {{ number_format($order->total, 0, ',', '.') }}</div>
+        <div style="font-family:'Plus Jakarta Sans';font-weight:800;font-size:30px;margin-bottom:4px">Rp {{ number_format($order->total, 0, ',', '.') }}</div>
         <div class="muted" style="margin-bottom:22px">{{ $pay['payment_name'] ?? $order->payment_method }}</div>
 
         @if (! empty($pay['qr_url']))
@@ -18,7 +18,7 @@
             <p class="muted" style="font-size:13.5px">Scan QRIS dengan aplikasi e-wallet / m-banking.</p>
         @elseif (! empty($pay['pay_code']))
             <div class="muted" style="font-size:13px">Nomor Virtual Account</div>
-            <div style="font-family:'Sora';font-weight:800;font-size:24px;letter-spacing:1px;margin:6px 0">{{ $pay['pay_code'] }}</div>
+            <div style="font-family:'Plus Jakarta Sans';font-weight:800;font-size:24px;letter-spacing:1px;margin:6px 0">{{ $pay['pay_code'] }}</div>
             <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('{{ $pay['pay_code'] }}');this.textContent='Tersalin ✓'">Salin Nomor</button>
         @endif
 

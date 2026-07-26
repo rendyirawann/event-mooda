@@ -7,7 +7,7 @@
     <p class="muted" style="margin-bottom:24px">Invoice {{ $order->invoice_no }}</p>
 
     <div class="card" style="padding:22px;margin-bottom:22px">
-        <div style="font-weight:700;font-family:'Sora';margin-bottom:2px">{{ $order->event->title }}</div>
+        <div style="font-weight:700;font-family:'Plus Jakarta Sans';margin-bottom:2px">{{ $order->event->title }}</div>
         <div class="muted" style="font-size:14px;margin-bottom:12px">{{ $order->event->starts_at?->format('d M Y, H:i') }} · {{ $order->event->city?->name }}</div>
         @foreach ($order->items as $it)
             <div style="display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--border)">
@@ -15,7 +15,7 @@
                 <span>{{ $it['price'] > 0 ? 'Rp ' . number_format($it['price'] * $it['qty'], 0, ',', '.') : 'GRATIS' }}</span>
             </div>
         @endforeach
-        <div style="display:flex;justify-content:space-between;font-family:'Sora';font-weight:800;font-size:18px;padding-top:14px;border-top:2px solid var(--border);margin-top:6px">
+        <div style="display:flex;justify-content:space-between;font-family:'Plus Jakarta Sans';font-weight:800;font-size:18px;padding-top:14px;border-top:2px solid var(--border);margin-top:6px">
             <span>Total</span><span>{{ $order->total > 0 ? 'Rp ' . number_format($order->total, 0, ',', '.') : 'GRATIS' }}</span>
         </div>
     </div>

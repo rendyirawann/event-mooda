@@ -14,7 +14,7 @@
                 {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(118)->margin(0)->generate($t->code) !!}
             </div>
             <div>
-                <div style="font-family:'Sora';font-weight:800;font-size:18px">{{ $t->ticketType?->name }}</div>
+                <div style="font-family:'Plus Jakarta Sans';font-weight:800;font-size:18px">{{ $t->ticketType?->name }}</div>
                 <div class="muted" style="font-size:13.5px;margin:2px 0">Kode: <b style="color:var(--text)">{{ $t->code }}</b></div>
                 <div class="muted" style="font-size:13.5px">Atas nama: {{ $t->holder_name ?: '—' }}</div>
                 <span style="display:inline-block;margin-top:8px;padding:3px 11px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff;background:{{ $t->status === 'used' ? '#9ca3af' : '#22c55e' }}">

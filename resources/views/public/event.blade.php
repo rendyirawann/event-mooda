@@ -13,12 +13,12 @@
 .tk-card { position:sticky; top:88px; padding:22px; align-self:start; }
 .tk-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); }
 .tk-row:last-of-type { border-bottom:0; }
-.tk-name { font-family:'Sora'; font-weight:700; }
-.tk-price { color:var(--brand); font-weight:700; font-family:'Sora'; }
+.tk-name { font-family:'Plus Jakarta Sans'; font-weight:700; }
+.tk-price { color:var(--brand); font-weight:700; font-family:'Plus Jakarta Sans'; }
 .qty { display:flex; align-items:center; gap:6px; flex-shrink:0; }
 .qty button { width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; font-size:16px; }
-.qty input { width:38px; text-align:center; border:0; background:transparent; color:var(--text); font-weight:700; font-family:'Sora'; }
-.tk-total { display:flex; justify-content:space-between; font-family:'Sora'; font-weight:800; font-size:18px; margin:18px 0; }
+.qty input { width:38px; text-align:center; border:0; background:transparent; color:var(--text); font-weight:700; font-family:'Plus Jakarta Sans'; }
+.tk-total { display:flex; justify-content:space-between; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; margin:18px 0; }
 .soldout { color:var(--muted); font-size:13px; font-weight:600; }
 @media(max-width:840px){ .ev-grid{ grid-template-columns:1fr; } .tk-card{ position:static; } }
 @endsection

@@ -9,7 +9,7 @@
     @forelse ($orders as $o)
         <a href="{{ route('my-tickets.show', $o) }}" class="card" style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;margin-bottom:12px">
             <div>
-                <div style="font-family:'Sora';font-weight:700">{{ $o->event->title }}</div>
+                <div style="font-family:'Plus Jakarta Sans';font-weight:700">{{ $o->event->title }}</div>
                 <div class="muted" style="font-size:13.5px">{{ $o->invoice_no }} · {{ $o->paid_at?->format('d M Y') }} · {{ $o->tickets()->count() }} tiket</div>
             </div>
             <span class="btn btn-ghost btn-sm">Lihat →</span>

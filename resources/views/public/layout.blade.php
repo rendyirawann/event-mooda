@@ -7,12 +7,10 @@
     <title>@yield('title', 'Event Mooda')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         (function () {
-            var t = localStorage.getItem('em-theme');
-            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', t);
+            document.documentElement.setAttribute('data-theme', localStorage.getItem('em-theme') || 'light');
         })();
     </script>
     <style>
@@ -28,12 +26,12 @@
         * { box-sizing:border-box; margin:0; padding:0; }
         html { scroll-behavior:smooth; }
         body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
-        h1,h2,h3,.display { font-family:'Sora',sans-serif; letter-spacing:-.02em; line-height:1.12; }
+        h1,h2,h3,.display { font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-.02em; line-height:1.12; }
         a { color:inherit; text-decoration:none; }
         img { max-width:100%; display:block; }
         .wrap { width:100%; max-width:100%; margin:0 auto; padding:0 clamp(18px,3.5vw,60px); }
         .grad-text { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
-        .btn { display:inline-flex; align-items:center; gap:8px; border:0; cursor:pointer; font-family:'Sora',sans-serif; font-weight:700; font-size:15px; padding:13px 24px; border-radius:14px; transition:transform .15s,box-shadow .2s; white-space:nowrap; }
+        .btn { display:inline-flex; align-items:center; gap:8px; border:0; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; padding:13px 24px; border-radius:14px; transition:transform .15s,box-shadow .2s; white-space:nowrap; }
         .btn-grad { background:var(--grad); color:#fff; box-shadow:0 10px 30px -10px rgba(225,29,42,.6); }
         .btn-grad:hover { transform:translateY(-2px); }
         .btn-ghost { background:transparent; color:var(--text); border:1.5px solid var(--border); }
@@ -44,7 +42,7 @@
         .muted { color:var(--muted); }
         .nav { position:sticky; top:0; z-index:50; background:var(--nav-bg); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
         .nav-in { display:flex; align-items:center; gap:16px; height:68px; }
-        .brand { display:flex; align-items:center; gap:10px; font-family:'Sora'; font-weight:800; font-size:20px; }
+        .brand { display:flex; align-items:center; gap:10px; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; }
         .brand .logo { width:38px; height:38px; border-radius:11px; background:var(--grad); display:grid; place-items:center; color:#fff; box-shadow:0 8px 20px -6px rgba(225,29,42,.65); }
         .nav-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
         .icon-btn { width:40px; height:40px; border-radius:11px; border:1.5px solid var(--border); background:var(--card); color:var(--text); display:grid; place-items:center; cursor:pointer; }
