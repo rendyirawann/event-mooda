@@ -1,6 +1,6 @@
 {{-- Layout publik Event Mooda (bertema gelap/terang) — dipakai halaman detail event, checkout, tiket. --}}
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
