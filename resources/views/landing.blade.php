@@ -29,7 +29,7 @@
         h1,h2,h3,h4,.dis{font-family:'Plus Jakarta Sans','Inter',sans-serif;letter-spacing:-.02em;line-height:1.08}
         a{color:inherit;text-decoration:none}
         img{max-width:100%;display:block}
-        .wrap{width:100%;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+        .wrap{width:100%;max-width:100%;margin:0 auto;padding:0 clamp(18px,3.5vw,60px)}
         .grad-text{background:linear-gradient(100deg,#D90429,#ff4d5e);-webkit-background-clip:text;background-clip:text;color:transparent}
         .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-weight:600;font-size:15px;padding:13px 26px;border-radius:999px;border:1.5px solid transparent;cursor:pointer;transition:transform .25s,box-shadow .25s,background .2s;white-space:nowrap}
         .btn-primary{background:var(--primary);color:#fff;box-shadow:0 12px 28px -10px rgba(217,4,41,.6)}
