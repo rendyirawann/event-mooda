@@ -38,6 +38,11 @@ class Event extends Model
         return $this->hasMany(TicketType::class);
     }
 
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     public function scopePublished($q)
     {
         return $q->where('status', 'published');

@@ -47,6 +47,7 @@
                             </div>
                             <div class="d-flex gap-2 flex-shrink-0">
                                 <a href="{{ route('organizer.events.edit', $e) }}" class="btn btn-sm btn-light-primary">Kelola</a>
+                                <a href="{{ route('organizer.checkin.scanner', $e) }}" class="btn btn-sm btn-light-success">Check-in</a>
                                 <form method="POST" action="{{ route('organizer.events.toggle', $e) }}" class="m-0">@csrf
                                     <button type="submit" class="btn btn-sm btn-light-{{ $e->status === 'published' ? 'warning' : 'success' }}">
                                         {{ $e->status === 'published' ? 'Jadikan Draft' : 'Publish' }}

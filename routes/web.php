@@ -50,6 +50,7 @@ use App\Http\Controllers\Backend\Superadmin\CityController;
 use App\Http\Controllers\Backend\Superadmin\TripayHistoryController;
 use App\Http\Controllers\Backend\Organizer\EventController as OrganizerEventController;
 use App\Http\Controllers\Backend\Organizer\TicketTypeController as OrganizerTicketTypeController;
+use App\Http\Controllers\Backend\Organizer\CheckInController;
 use App\Http\Controllers\PublicEventController;
 use App\Http\Controllers\CheckoutController as TicketCheckoutController;
 use App\Http\Controllers\MyTicketController;
@@ -140,6 +141,9 @@ Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->gr
         Route::post('/events/{event}/tickets', [OrganizerTicketTypeController::class, 'store'])->name('tickets.store');
         Route::put('/events/{event}/tickets/{ticketType}', [OrganizerTicketTypeController::class, 'update'])->name('tickets.update');
         Route::delete('/events/{event}/tickets/{ticketType}', [OrganizerTicketTypeController::class, 'destroy'])->name('tickets.destroy');
+        // Check-in e-ticket (pindai QR / kode) di lokasi
+        Route::get('/events/{event}/checkin', [CheckInController::class, 'scanner'])->name('checkin.scanner');
+        Route::post('/events/{event}/checkin', [CheckInController::class, 'check'])->name('checkin.check');
     });
 
     // --- CHECKOUT TIKET & TIKET SAYA (pembeli login) — Tripay prefix TIX-, konfirmasi via polling ---
