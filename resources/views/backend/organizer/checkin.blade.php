@@ -26,7 +26,7 @@
                         <div id="reader" style="width:100%;border-radius:12px;overflow:hidden"></div>
                         <div id="camNote" class="text-muted fs-8 mb-3"></div>
                         <label class="form-label fw-semibold">Kode tiket (manual / scanner USB):</label>
-                        <form id="manualForm" class="d-flex gap-2">
+                        <form id="manualForm" class="d-flex gap-2" data-noloader>
                             <input id="codeInput" class="form-control form-control-solid" placeholder="TKT-XXXXXXXXXX" autocomplete="off" autofocus>
                             <button type="submit" class="btn btn-primary">Cek</button>
                         </form>

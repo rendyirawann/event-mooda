@@ -19,7 +19,7 @@
 
                 <div class="d-flex flex-center flex-column flex-column-fluid py-6">
 
-                    <form class="form w-100" method="POST" action="{{ route('register') }}">
+                    <form class="form w-100" method="POST" action="{{ route('register') }}" data-noloader>
                         @csrf
 
                         <div class="text-center mb-6">

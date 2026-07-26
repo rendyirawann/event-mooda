@@ -168,7 +168,7 @@
                         </div>
                     @endif
 
-                    <form class="form w-100" id="kt_sign_in_form" method="POST" action="{{ route('login') }}">
+                    <form class="form w-100" id="kt_sign_in_form" method="POST" action="{{ route('login') }}" data-noloader>
                         @csrf
 
                         <div class="fv-row mb-8">

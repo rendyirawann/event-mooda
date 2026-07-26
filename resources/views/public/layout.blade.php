@@ -89,6 +89,7 @@
             localStorage.setItem('em-theme', cur);
         });
     </script>
+    @include('partials._button_loader')
     @stack('scripts')
 </body>
 </html>

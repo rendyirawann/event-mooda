@@ -442,6 +442,7 @@ License: Proprietary - Mooda System
     </script>
 
     @include('partials._number_format')
+    @include('partials._button_loader')
     @stack('scripts')
 
     @can('view_expense')

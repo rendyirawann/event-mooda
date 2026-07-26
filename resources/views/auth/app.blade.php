@@ -128,6 +128,7 @@ License: Proprietary - Mooda System
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <!--end::Global Javascript Bundle-->
+    @include('partials._button_loader')
     @stack('scripts')
     <!--end::Javascript-->
 </body>

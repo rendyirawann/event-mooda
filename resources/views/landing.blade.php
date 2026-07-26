@@ -451,7 +451,7 @@
             <div class="news reveal">
                 <h2>Jangan Ketinggalan Event Seru</h2>
                 <p>Dapatkan info event terbaru & promo tiket langsung ke emailmu.</p>
-                <form onsubmit="return false;"><input placeholder="Masukkan email kamu"><button class="btn btn-primary">Subscribe</button></form>
+                <form onsubmit="return false;" data-noloader><input placeholder="Masukkan email kamu"><button class="btn btn-primary">Subscribe</button></form>
             </div>
         </div>
     </section>
@@ -484,5 +484,6 @@
         var io = new IntersectionObserver(function (es) { es.forEach(function (en, i) { if (en.isIntersecting) { en.target.style.transitionDelay = (Math.min(i,6)*40) + 'ms'; en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold:.1 });
         document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
     </script>
+    @include('partials._button_loader')
 </body>
 </html>
