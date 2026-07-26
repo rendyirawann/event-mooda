@@ -31,7 +31,7 @@
         h1,h2,h3,.display { font-family:'Sora',sans-serif; letter-spacing:-.02em; line-height:1.12; }
         a { color:inherit; text-decoration:none; }
         img { max-width:100%; display:block; }
-        .wrap { width:100%; max-width:1100px; margin:0 auto; padding:0 24px; }
+        .wrap { width:100%; max-width:100%; margin:0 auto; padding:0 clamp(18px,3.5vw,60px); }
         .grad-text { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
         .btn { display:inline-flex; align-items:center; gap:8px; border:0; cursor:pointer; font-family:'Sora',sans-serif; font-weight:700; font-size:15px; padding:13px 24px; border-radius:14px; transition:transform .15s,box-shadow .2s; white-space:nowrap; }
         .btn-grad { background:var(--grad); color:#fff; box-shadow:0 10px 30px -10px rgba(225,29,42,.6); }

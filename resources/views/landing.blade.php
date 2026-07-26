@@ -37,7 +37,7 @@
         .sans { font-family:'Inter',system-ui,sans-serif; }
         a { color:inherit; text-decoration:none; }
         img { max-width:100%; display:block; }
-        .wrap { width:100%; max-width:1180px; margin:0 auto; padding:0 22px; }
+        .wrap { width:100%; max-width:100%; margin:0 auto; padding:0 clamp(18px,3.5vw,60px); }
         .kicker { font-family:'Inter',sans-serif; text-transform:uppercase; letter-spacing:.22em; font-size:11px; font-weight:700; color:var(--red); }
         .rule { border-top:1px solid var(--rule); }
         .rule-strong { border-top:2px solid var(--rule-strong); }
