@@ -22,6 +22,14 @@
                 </a>
             </div>
         @endif
+        {{-- RIWAYAT TRIPAY (Superadmin): pembayaran POS + event dalam satu tempat --}}
+        @can('blog.manage')
+            <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('tripay-history.*') ? 'here show ' : '' }}">
+                <a href="{{ route('tripay-history.index') }}" class="menu-link px-4 {{ request()->routeIs('tripay-history.*') ? 'active ' : '' }}">
+                    <span class="menu-title">Riwayat Tripay</span>
+                </a>
+            </div>
+        @endcan
         {{-- DATA MASTER (disembunyikan utk Superadmin di mode Analitik) --}}
         @if (! ($isSuperadminView ?? false) || ($saMode ?? 'pos') === 'pos')
         @can('view_data_master')

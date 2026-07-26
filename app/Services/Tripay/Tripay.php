@@ -23,9 +23,10 @@ use Illuminate\Support\Facades\Log;
  */
 class Tripay
 {
-    public const CHANNEL_PATH = '/merchant/payment-channel';
-    public const CREATE_PATH  = '/transaction/create';
-    public const DETAIL_PATH  = '/transaction/detail';
+    public const CHANNEL_PATH      = '/merchant/payment-channel';
+    public const CREATE_PATH       = '/transaction/create';
+    public const DETAIL_PATH       = '/transaction/detail';
+    public const TRANSACTIONS_PATH = '/merchant/transactions';
 
     private string $merchantCode;
     private string $apiKey;
@@ -188,6 +189,22 @@ class Tripay
             return ['_http_status' => 0];
         }
         $res = $this->httpGet(self::DETAIL_PATH . '?reference=' . urlencode($reference));
+
+        return ($res['body'] ?: []) + ['_http_status' => $res['status']];
+    }
+
+    /**
+     * Daftar transaksi merchant (untuk dashboard riwayat gabungan POS + event).
+     * @param array $params page/per_page/status/method/reference/merchant_ref
+     * @return array body Tripay ({data:[], pagination:{}}) + _http_status
+     */
+    public function merchantTransactions(array $params = []): array
+    {
+        if (! $this->isConfigured()) {
+            return ['_http_status' => 0, 'data' => [], 'pagination' => []];
+        }
+        $query = http_build_query(array_filter($params, fn ($v) => $v !== null && $v !== ''));
+        $res   = $this->httpGet(self::TRANSACTIONS_PATH . ($query ? '?' . $query : ''));
 
         return ($res['body'] ?: []) + ['_http_status' => $res['status']];
     }

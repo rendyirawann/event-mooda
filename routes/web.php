@@ -47,6 +47,7 @@ use App\Http\Controllers\Backend\Superadmin\SocialLinkController;
 use App\Http\Controllers\Backend\Superadmin\EventCategoryController;
 use App\Http\Controllers\Backend\Superadmin\ProvinceController;
 use App\Http\Controllers\Backend\Superadmin\CityController;
+use App\Http\Controllers\Backend\Superadmin\TripayHistoryController;
 use App\Http\Controllers\Backend\Organizer\EventController as OrganizerEventController;
 use App\Http\Controllers\Backend\Organizer\TicketTypeController as OrganizerTicketTypeController;
 use App\Http\Controllers\PublicEventController;
@@ -282,6 +283,9 @@ Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->gr
         Route::put('/admin/cities/{city}', [CityController::class, 'update'])->name('cities.update');
         Route::post('/admin/cities/{city}/toggle', [CityController::class, 'toggle'])->name('cities.toggle');
         Route::delete('/admin/cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
+
+        // Riwayat pembayaran Tripay TERPADU (POS + tiket event) — Superadmin
+        Route::get('/admin/tripay-history', [TripayHistoryController::class, 'index'])->name('tripay-history.index');
 
         // Mode Pemeliharaan (platform-wide, Superadmin)
         Route::get('/admin/maintenance-settings', [MaintenanceController::class, 'index'])->name('maintenance-settings.index');
