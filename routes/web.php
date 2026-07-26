@@ -47,6 +47,8 @@ use App\Http\Controllers\Backend\Superadmin\SocialLinkController;
 use App\Http\Controllers\Backend\Superadmin\EventCategoryController;
 use App\Http\Controllers\Backend\Superadmin\ProvinceController;
 use App\Http\Controllers\Backend\Superadmin\CityController;
+use App\Http\Controllers\Backend\Organizer\EventController as OrganizerEventController;
+use App\Http\Controllers\Backend\Organizer\TicketTypeController as OrganizerTicketTypeController;
 use App\Http\Controllers\Backend\Superadmin\MaintenanceController;
 
 /*
@@ -118,6 +120,20 @@ Route::middleware(['auth', 'forbid-banned-user', 'maintenance', 'verified'])->gr
     Route::get('/admin/view-mode/{mode}', [DashboardAdminController::class, 'switchMode'])->name('view-mode.switch');
     // Superadmin memilih toko yang dioperasikan di mode POS
     Route::get('/admin/pos-tenant/{id}', [DashboardAdminController::class, 'setPosTenant'])->name('pos-tenant.set');
+
+    // --- ORGANIZER: kelola event & jenis tiket (peran organizer / Superadmin) ---
+    Route::prefix('organizer')->name('organizer.')->group(function () {
+        Route::get('/events', [OrganizerEventController::class, 'index'])->name('events.index');
+        Route::get('/events/create', [OrganizerEventController::class, 'create'])->name('events.create');
+        Route::post('/events', [OrganizerEventController::class, 'store'])->name('events.store');
+        Route::get('/events/{event}/edit', [OrganizerEventController::class, 'edit'])->name('events.edit');
+        Route::put('/events/{event}', [OrganizerEventController::class, 'update'])->name('events.update');
+        Route::post('/events/{event}/toggle', [OrganizerEventController::class, 'togglePublish'])->name('events.toggle');
+        Route::delete('/events/{event}', [OrganizerEventController::class, 'destroy'])->name('events.destroy');
+        Route::post('/events/{event}/tickets', [OrganizerTicketTypeController::class, 'store'])->name('tickets.store');
+        Route::put('/events/{event}/tickets/{ticketType}', [OrganizerTicketTypeController::class, 'update'])->name('tickets.update');
+        Route::delete('/events/{event}/tickets/{ticketType}', [OrganizerTicketTypeController::class, 'destroy'])->name('tickets.destroy');
+    });
 
     // --- MY ACCOUNT / PROFILE (accessible by ALL authenticated users) ---
     Route::get('/admin/my-account', [AccountController::class, 'index'])->name('account.index');

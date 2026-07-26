@@ -14,6 +14,14 @@
                 <span class="menu-title">Dashboards</span>
             </a>
         </div>
+        {{-- EVENT SAYA (organizer & Superadmin) --}}
+        @if (auth()->user()?->hasRole('organizer') || auth()->user()?->isSuperadmin())
+            <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('organizer.*') ? 'here show ' : '' }}">
+                <a href="{{ route('organizer.events.index') }}" class="menu-link px-4 {{ request()->routeIs('organizer.*') ? 'active ' : '' }}">
+                    <span class="menu-title">Event Saya</span>
+                </a>
+            </div>
+        @endif
         {{-- DATA MASTER (disembunyikan utk Superadmin di mode Analitik) --}}
         @if (! ($isSuperadminView ?? false) || ($saMode ?? 'pos') === 'pos')
         @can('view_data_master')
