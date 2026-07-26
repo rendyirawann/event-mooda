@@ -1,28 +1,11 @@
 {{-- Event Mooda — Landing platform tiket event (full-width, tema gelap/terang) --}}
 @php
-    // Data contoh (dummy) — nanti diganti data nyata setelah skema Event/Ticket dimigrasi.
-    $categories = [
-        ['name' => 'Musik & Konser', 'emoji' => '🎵', 'g' => '#7c3aed,#ec4899'],
-        ['name' => 'Festival',       'emoji' => '🎪', 'g' => '#f97316,#ef4444'],
-        ['name' => 'Olahraga',       'emoji' => '⚽', 'g' => '#22c55e,#0ea5e9'],
-        ['name' => 'Seminar',        'emoji' => '🎤', 'g' => '#0ea5e9,#6366f1'],
-        ['name' => 'Workshop',       'emoji' => '🛠️', 'g' => '#f59e0b,#f97316'],
-        ['name' => 'Teater & Seni',  'emoji' => '🎭', 'g' => '#ec4899,#8b5cf6'],
-        ['name' => 'Komunitas',      'emoji' => '👥', 'g' => '#14b8a6,#22c55e'],
-        ['name' => 'Pameran',        'emoji' => '🖼️', 'g' => '#6366f1,#ec4899'],
-    ];
-    $events = [
-        ['title' => 'Soundrenaline Festival 2026', 'cat' => 'Festival Musik', 'date' => '12 SEP 2026', 'city' => 'Jakarta',  'venue' => 'GBK Senayan',        'price' => 350000, 'g' => '#7c3aed,#ec4899', 'hot' => true],
-        ['title' => 'Java Jazz Night',             'cat' => 'Konser',         'date' => '28 AGU 2026', 'city' => 'Bandung',  'venue' => 'Sabuga',            'price' => 200000, 'g' => '#0ea5e9,#6366f1', 'hot' => false],
-        ['title' => 'Startup Summit Indonesia',    'cat' => 'Seminar',        'date' => '05 OKT 2026', 'city' => 'Surabaya', 'venue' => 'Grand City',        'price' => 150000, 'g' => '#22c55e,#0ea5e9', 'hot' => false],
-        ['title' => 'Color Run Fest',              'cat' => 'Olahraga',       'date' => '19 SEP 2026', 'city' => 'Jakarta',  'venue' => 'Ancol',            'price' => 120000, 'g' => '#f97316,#ef4444', 'hot' => true],
-        ['title' => 'Creative Workshop Series',    'cat' => 'Workshop',       'date' => '02 AGU 2026', 'city' => 'Yogyakarta','venue' => 'Jogja Expo',        'price' => 85000,  'g' => '#f59e0b,#f97316', 'hot' => false],
-        ['title' => 'Pesta Rakyat Kuliner',        'cat' => 'Festival',       'date' => '14 SEP 2026', 'city' => 'Semarang', 'venue' => 'Simpang Lima',      'price' => 0,      'g' => '#14b8a6,#22c55e', 'hot' => false],
-        ['title' => 'Indie Music Showcase',        'cat' => 'Konser',         'date' => '21 SEP 2026', 'city' => 'Malang',   'venue' => 'Kampoeng Kajoetangan','price' => 95000, 'g' => '#ec4899,#8b5cf6', 'hot' => false],
-        ['title' => 'Tech & Gaming Expo',          'cat' => 'Pameran',        'date' => '30 OKT 2026', 'city' => 'Jakarta',  'venue' => 'ICE BSD',          'price' => 175000, 'g' => '#6366f1,#ec4899', 'hot' => true],
-    ];
-    $rupiah = fn ($n) => $n <= 0 ? 'GRATIS' : 'Rp ' . number_format($n, 0, ',', '.');
-    $waUrl  = 'https://wa.me/6281265558044';
+    // Data nyata dari controller: $categories (EventCategory), $cities (City featured), $events (Event published).
+    $categories = $categories ?? collect();
+    $cities     = $cities ?? collect();
+    $events     = $events ?? collect();
+    $rupiah     = fn ($n) => $n <= 0 ? 'GRATIS' : 'Rp ' . number_format($n, 0, ',', '.');
+    $waUrl      = 'https://wa.me/6281265558044';
 @endphp
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
@@ -166,6 +149,16 @@
         .cat b { font-family: 'Sora'; font-size: 16px; font-weight: 700; }
         .cat small { color: var(--muted); font-size: 12.5px; }
 
+        /* CITIES */
+        .cities { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+        .city { position: relative; aspect-ratio: 3/2.2; border-radius: 20px; overflow: hidden; display: flex; align-items: flex-end; padding: 18px; color: #fff; background-size: cover; background-position: center; border: 1px solid var(--border); transition: transform .18s, box-shadow .18s; }
+        .city:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+        .city-emoji { position: absolute; top: 14px; right: 16px; font-size: 40px; line-height: 1; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+        .city-meta { position: relative; z-index: 1; }
+        .city-meta b { font-family: 'Sora'; font-weight: 800; font-size: 20px; display: block; text-shadow: 0 2px 12px rgba(0,0,0,.55); }
+        .city-meta small { font-weight: 600; opacity: .95; text-shadow: 0 1px 8px rgba(0,0,0,.55); }
+        @media (max-width: 980px) { .cities { grid-template-columns: repeat(2, 1fr); } }
+
         /* EVENT CARDS */
         .grid-ev { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
         .ev {
@@ -275,6 +268,7 @@
             <div class="nav-links">
                 <a href="#trending">Jelajahi Event</a>
                 <a href="#kategori">Kategori</a>
+                <a href="#kota">Kota</a>
                 <a href="#organizer">Buat Event</a>
                 <a href="#cara">Cara Kerja</a>
             </div>
@@ -293,6 +287,7 @@
         <div class="mobile-menu" id="mobileMenu">
             <a href="#trending">Jelajahi Event</a>
             <a href="#kategori">Kategori</a>
+            <a href="#kota">Kota</a>
             <a href="#organizer">Buat Event</a>
             <a href="#cara">Cara Kerja</a>
             <a href="{{ route('login') }}">Masuk</a>
@@ -342,9 +337,9 @@
             <div class="cats">
                 @foreach ($categories as $c)
                     <a href="#trending" class="cat reveal">
-                        <span class="ic" style="background:linear-gradient(135deg,{{ $c['g'] }});">{{ $c['emoji'] }}</span>
+                        <span class="ic" style="background:linear-gradient(135deg,{{ $c->color }});">{{ $c->icon }}</span>
                         <span>
-                            <b>{{ $c['name'] }}</b><br>
+                            <b>{{ $c->name }}</b><br>
                             <small>Lihat event</small>
                         </span>
                     </a>
@@ -352,6 +347,32 @@
             </div>
         </div>
     </section>
+
+    {{-- ============ KOTA ============ --}}
+    @if ($cities->isNotEmpty())
+    <section class="sec" id="kota">
+        <div class="wrap">
+            <div class="sec-head reveal">
+                <div>
+                    <div class="eyebrow">Berdasarkan Lokasi</div>
+                    <h2>Jelajahi Event per Kota</h2>
+                    <p>Temukan acara seru di kotamu — klik kota untuk lihat event yang ada di sana.</p>
+                </div>
+            </div>
+            <div class="cities">
+                @foreach ($cities as $city)
+                    <a href="#trending" class="city reveal" style="@if ($city->landmarkUrl())background-image:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.68)),url('{{ $city->landmarkUrl() }}');@else background:{{ $city->gradient() }};@endif">
+                        @unless ($city->landmarkUrl())<span class="city-emoji">{{ $city->landmark_emoji }}</span>@endunless
+                        <span class="city-meta">
+                            <b>{{ $city->name }}</b>
+                            <small>{{ $city->events_count ?? 0 }} event</small>
+                        </span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- ============ TRENDING EVENTS ============ --}}
     <section class="sec" id="trending" style="background:var(--bg-soft);">
@@ -365,30 +386,33 @@
                 <a href="{{ route('register') }}" class="link-more">Lihat semua event →</a>
             </div>
             <div class="grid-ev">
-                @foreach ($events as $e)
+                @forelse ($events as $e)
+                    @php $price = $e->priceFrom(); @endphp
                     <article class="ev reveal">
-                        <div class="ev-poster" style="background:linear-gradient(135deg,{{ $e['g'] }});">
-                            <span class="ev-badge">{{ $e['cat'] }}</span>
-                            @if ($e['hot'])<span class="ev-hot">HOT 🔥</span>@endif
-                            <span class="pt">{{ $e['title'] }}</span>
+                        <div class="ev-poster" style="@if ($e->posterUrl())background-image:url('{{ $e->posterUrl() }}');background-size:cover;background-position:center;@else background:{{ $e->gradient() }};@endif">
+                            <span class="ev-badge">{{ $e->category?->name }}</span>
+                            @if ($e->is_featured)<span class="ev-hot">HOT 🔥</span>@endif
+                            @unless ($e->posterUrl())<span class="pt">{{ $e->title }}</span>@endunless
                         </div>
                         <div class="ev-body">
-                            <span class="ev-date">📅 {{ $e['date'] }}</span>
-                            <h3 class="ev-title">{{ $e['title'] }}</h3>
+                            <span class="ev-date">📅 {{ strtoupper($e->starts_at?->format('d M Y')) }}</span>
+                            <h3 class="ev-title">{{ $e->title }}</h3>
                             <span class="ev-meta">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                {{ $e['venue'] }}, {{ $e['city'] }}
+                                {{ $e->venue_name }}, {{ $e->city?->name }}
                             </span>
                             <div class="ev-foot">
                                 <div class="ev-price">
                                     <small>Mulai dari</small>
-                                    <b class="{{ $e['price'] <= 0 ? 'grad-text' : '' }}">{{ $rupiah($e['price']) }}</b>
+                                    <b class="{{ $price <= 0 ? 'grad-text' : '' }}">{{ $rupiah($price) }}</b>
                                 </div>
                                 <a href="{{ route('register') }}" class="btn btn-grad btn-sm">Beli Tiket</a>
                             </div>
                         </div>
                     </article>
-                @endforeach
+                @empty
+                    <p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:48px 0;">Belum ada event dipublikasikan. Jadilah penyelenggara pertama!</p>
+                @endforelse
             </div>
         </div>
     </section>

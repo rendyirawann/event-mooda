@@ -73,10 +73,16 @@ Route::middleware(['auth', 'forbid-banned-user', 'can:affiliate.refer'])->group(
     Route::post('/admin/affiliate-saya/join', [\App\Http\Controllers\Backend\Affiliate\MyAffiliateController::class, 'join'])->name('affiliate.my.join');
 });
 
-// Halaman Depan: Landing Page platform tiket event (Event Mooda)
-// Data event masih dummy di view — akan diganti data nyata setelah skema Event/Ticket dimigrasi.
+// Halaman Depan: Landing Page platform tiket event (Event Mooda) — data nyata dari DB.
 Route::get('/', function () {
-    return view('landing');
+    return view('landing', [
+        'categories' => \App\Models\EventCategory::active()->ordered()->get(),
+        'cities'     => \App\Models\City::featured()
+            ->withCount(['events as events_count' => fn ($q) => $q->where('status', 'published')])
+            ->get(),
+        'events'     => \App\Models\Event::published()->with(['category', 'city'])
+            ->orderByDesc('is_featured')->orderBy('starts_at')->take(8)->get(),
+    ]);
 })->name('landing');
 
 // Halaman checkout (contoh publik) — memperlihatkan alur bayar Mooda (VA/QRIS) untuk
