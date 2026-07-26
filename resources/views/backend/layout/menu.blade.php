@@ -22,11 +22,24 @@
                 </a>
             </div>
         @endif
-        {{-- RIWAYAT TRIPAY (Superadmin): pembayaran POS + event dalam satu tempat --}}
+        {{-- PENCAIRAN (organizer / Superadmin) --}}
+        @if (auth()->user()?->hasRole('organizer') || auth()->user()?->isSuperadmin())
+            <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('organizer.payout.*') ? 'here show ' : '' }}">
+                <a href="{{ route('organizer.payout.index') }}" class="menu-link px-4 {{ request()->routeIs('organizer.payout.*') ? 'active ' : '' }}">
+                    <span class="menu-title">Pencairan</span>
+                </a>
+            </div>
+        @endif
+        {{-- RIWAYAT TRIPAY + KELOLA PENCAIRAN (Superadmin) --}}
         @can('blog.manage')
             <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('tripay-history.*') ? 'here show ' : '' }}">
                 <a href="{{ route('tripay-history.index') }}" class="menu-link px-4 {{ request()->routeIs('tripay-history.*') ? 'active ' : '' }}">
                     <span class="menu-title">Riwayat Tripay</span>
+                </a>
+            </div>
+            <div class="menu-item menu-here-bg me-0 me-lg-2 {{ request()->routeIs('payouts.*') ? 'here show ' : '' }}">
+                <a href="{{ route('payouts.index') }}" class="menu-link px-4 {{ request()->routeIs('payouts.*') ? 'active ' : '' }}">
+                    <span class="menu-title">Kelola Pencairan</span>
                 </a>
             </div>
         @endcan
