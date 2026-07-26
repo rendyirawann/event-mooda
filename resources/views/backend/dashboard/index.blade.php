@@ -1,0 +1,412 @@
+@extends('backend.layout.app')
+@section('title', 'Dashboard Analytics')
+@section('content')
+
+    @php
+        $selMonthLabel = \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth ?? now()->format('Y-m'))->translatedFormat('F Y');
+    @endphp
+
+    <div id="kt_app_content" class="app-content flex-column-fluid mt-5">
+        <div id="kt_app_content_container" class="app-container container-xxl">
+
+            {{-- Welcome header --}}
+            <div class="card border-0 shadow-sm mb-6 mb-xl-8"
+                style="background: linear-gradient(120deg, #4f46e5 0%, #6366f1 55%, #818cf8 100%);">
+                <div class="card-body d-flex flex-wrap align-items-center justify-content-between py-6">
+                    <div class="text-white">
+                        <h2 class="text-white fw-bold mb-1">Halo, {{ auth()->user()->name }} 👋</h2>
+                        <div class="text-white opacity-75 fs-6">
+                            {{ optional($currentTenant)->name ?? 'Mooda' }} •
+                            {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-3 mt-sm-0 align-items-center flex-wrap">
+                        <form method="GET" class="me-1">
+                            <select name="month" class="form-select form-select-sm fw-bold border-0 text-gray-800"
+                                onchange="this.form.submit()" style="min-width: 150px;" title="Pilih bulan analitik">
+                                @foreach (($monthOptions ?? []) as $opt)
+                                    <option value="{{ $opt['value'] }}" {{ ($selectedMonth ?? '') === $opt['value'] ? 'selected' : '' }}>
+                                        {{ $opt['label'] }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                        @if ($isSuperadminView ?? false)
+                            <a href="{{ route('view-mode.switch', 'analytics') }}" class="btn btn-light fw-bold">
+                                <i class="ki-outline ki-chart-simple fs-3 me-1"></i> Dashboard Analitik
+                            </a>
+                        @endif
+                        @can('view_kasir')
+                            <a href="{{ route('kasir.index') }}" class="btn btn-light fw-bold">
+                                <i class="ki-outline ki-handcart fs-3 me-1"></i> Buka Kasir
+                            </a>
+                        @endcan
+                        <a href="{{ route('download-app') }}" class="btn btn-active-light text-white border border-white border-opacity-25 fw-bold">
+                            <i class="ki-outline ki-tablet fs-3 me-1"></i> Aplikasi Tablet
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @php
+                $avgPerOrder = ($summary['orders_count'] ?? 0) > 0
+                    ? ($summary['revenue'] / $summary['orders_count'])
+                    : 0;
+            @endphp
+
+            {{-- Toggle tampil/sembunyi panduan Setup Awal (preferensi per-tenant, tetap terlihat walau kartu disembunyikan) --}}
+            @if (isset($onboarding) && $onboarding['has_tenant'])
+                <div class="d-flex justify-content-end align-items-center mb-3">
+                    <form method="POST" action="{{ route('dashboard.onboarding-toggle') }}" id="onb-toggle-form" class="m-0">
+                        @csrf
+                        <label class="form-check form-switch form-check-custom form-check-solid mb-0">
+                            <input class="form-check-input" type="checkbox" name="show" value="1"
+                                {{ $onboarding['show'] ? 'checked' : '' }}
+                                onchange="document.getElementById('onb-toggle-form').submit()">
+                            <span class="form-check-label fw-semibold text-gray-600 fs-8 ms-2">Panduan Setup Awal</span>
+                        </label>
+                    </form>
+                </div>
+            @endif
+
+            {{-- ONBOARDING: misi setup awal (otomatis tercentang saat selesai; tampil/sembunyi via toggle di atas). --}}
+            @if (isset($onboarding) && $onboarding['show'])
+                <div class="card border-0 shadow-sm mb-6 mb-xl-8 border-start border-4 border-primary" id="onboarding-card">
+                    <div class="card-body p-6">
+                        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                            <span class="badge badge-primary">Setup Awal</span>
+                            <h3 class="fw-bold text-gray-900 m-0">Selesaikan setup kasir POS Anda 🚀</h3>
+                            <span class="badge badge-light-primary ms-auto">{{ ($onboarding['settings'] ? 1 : 0) + ($onboarding['master'] ? 1 : 0) + ($onboarding['employees'] ? 1 : 0) }}/3 selesai</span>
+                        </div>
+                        <p class="text-muted fs-7 mb-5">Lengkapi langkah berikut agar kasir siap dipakai. Progres tercentang otomatis saat selesai.</p>
+
+                        {{-- Misi 1 --}}
+                        <div class="d-flex align-items-center justify-content-between border rounded p-4 mb-3 {{ $onboarding['settings'] ? 'bg-light-success border-success' : 'bg-light' }}">
+                            <div class="d-flex align-items-center">
+                                @if ($onboarding['settings'])
+                                    <i class="ki-outline ki-check-circle fs-2x text-success me-3"></i>
+                                @else
+                                    <span class="badge badge-circle badge-primary me-3 fs-6" style="width:34px;height:34px">1</span>
+                                @endif
+                                <div>
+                                    <div class="fw-bold text-gray-900">Setup Toko &amp; Struk</div>
+                                    <div class="fs-8 text-muted">Nama toko, alamat, layout struk &amp; printer</div>
+                                </div>
+                            </div>
+                            @if ($onboarding['settings'])
+                                <span class="badge badge-light-success"><i class="ki-outline ki-check fs-6 me-1"></i>Selesai</span>
+                            @elseif ($onboarding['can_store'])
+                                <a href="{{ route('settings.index') }}" class="btn btn-sm btn-primary text-nowrap">Setup Sekarang</a>
+                            @else
+                                <span class="badge badge-light-secondary text-nowrap"><i class="ki-outline ki-lock-2 fs-7 me-1"></i>Hanya Owner/Admin yang mengatur ini</span>
+                            @endif
+                        </div>
+
+                        {{-- Misi 2 --}}
+                        <div class="d-flex align-items-center justify-content-between border rounded p-4 mb-3 {{ $onboarding['master'] ? 'bg-light-success border-success' : 'bg-light' }}">
+                            <div class="d-flex align-items-center">
+                                @if ($onboarding['master'])
+                                    <i class="ki-outline ki-check-circle fs-2x text-success me-3"></i>
+                                @else
+                                    <span class="badge badge-circle badge-primary me-3 fs-6" style="width:34px;height:34px">2</span>
+                                @endif
+                                <div>
+                                    <div class="fw-bold text-gray-900">Setup Menu &amp; Kategori</div>
+                                    <div class="fs-8 text-muted">Tambah kategori + menu makanan &amp; minuman</div>
+                                </div>
+                            </div>
+                            @if ($onboarding['master'])
+                                <span class="badge badge-light-success"><i class="ki-outline ki-check fs-6 me-1"></i>Selesai</span>
+                            @elseif ($onboarding['can_store'])
+                                <a href="{{ route('menus.index') }}" class="btn btn-sm btn-primary text-nowrap">Setup Sekarang</a>
+                            @else
+                                <span class="badge badge-light-secondary text-nowrap"><i class="ki-outline ki-lock-2 fs-7 me-1"></i>Hanya Owner/Admin yang mengatur ini</span>
+                            @endif
+                        </div>
+
+                        {{-- Misi 3 --}}
+                        <div class="d-flex align-items-center justify-content-between border rounded p-4 {{ $onboarding['employees'] ? 'bg-light-success border-success' : 'bg-light' }}">
+                            <div class="d-flex align-items-center">
+                                @if ($onboarding['employees'])
+                                    <i class="ki-outline ki-check-circle fs-2x text-success me-3"></i>
+                                @else
+                                    <span class="badge badge-circle badge-primary me-3 fs-6" style="width:34px;height:34px">3</span>
+                                @endif
+                                <div>
+                                    <div class="fw-bold text-gray-900">Setup Karyawan</div>
+                                    <div class="fs-8 text-muted">Buat akun Owner, Admin &amp; Kasir</div>
+                                </div>
+                            </div>
+                            @if ($onboarding['employees'])
+                                <span class="badge badge-light-success"><i class="ki-outline ki-check fs-6 me-1"></i>Selesai</span>
+                            @elseif ($onboarding['can_employees'])
+                                <a href="{{ route('users.index') }}" class="btn btn-sm btn-primary text-nowrap">Setup Sekarang</a>
+                            @else
+                                <span class="badge badge-light-secondary text-nowrap"><i class="ki-outline ki-lock-2 fs-7 me-1"></i>Hanya Owner yang mengatur ini</span>
+                            @endif
+                        </div>
+
+                        <div class="text-end mt-4">
+                            <button type="button" id="onboarding-dismiss" class="btn btn-sm btn-light-secondary">
+                                <i class="ki-outline ki-eye-slash fs-6 me-1"></i>Jangan tampilkan lagi (30 hari)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    (function () {
+                        var card = document.getElementById('onboarding-card');
+                        var btn = document.getElementById('onboarding-dismiss');
+                        if (!card) return;
+                        var KEY = 'mooda_onboarding_dismissed_at';
+                        var THIRTY = 30 * 24 * 60 * 60 * 1000; // 30 hari
+                        try {
+                            var at = parseInt(localStorage.getItem(KEY) || '0', 10);
+                            if (at && (Date.now() - at) < THIRTY) { card.style.display = 'none'; }
+                        } catch (e) {}
+                        if (btn) btn.addEventListener('click', function () {
+                            try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+                            card.style.display = 'none';
+                        });
+                    })();
+                </script>
+            @endif
+
+            <div class="row g-5 g-xl-10 mb-xl-10">
+                <div class="col-6 col-md-3">
+                    <div class="card bg-light-primary border-0 shadow-sm h-100">
+                        <div class="card-body p-6">
+                            <div class="fs-6 fw-semibold text-primary mb-2">Total Omzet ({{ $selMonthLabel }})</div>
+                            <div class="fs-2hx fw-bold text-gray-800">Rp
+                                {{ number_format($summary['revenue'], 0, ',', '.') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card bg-light-success border-0 shadow-sm h-100">
+                        <div class="card-body p-6">
+                            <div class="fs-6 fw-semibold text-success mb-2">Jumlah Transaksi ({{ $selMonthLabel }})</div>
+                            <div class="fs-2hx fw-bold text-gray-800">
+                                {{ number_format($summary['orders_count'] ?? 0, 0, ',', '.') }} <span
+                                    class="fs-4 text-muted">Transaksi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card bg-light-warning border-0 shadow-sm h-100">
+                        <div class="card-body p-6">
+                            <div class="fs-6 fw-semibold text-warning mb-2">Rata-rata / Transaksi</div>
+                            <div class="fs-2hx fw-bold text-gray-800">Rp
+                                {{ number_format($avgPerOrder, 0, ',', '.') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card bg-light-info border-0 shadow-sm h-100">
+                        <div class="card-body p-6">
+                            <div class="fs-6 fw-semibold text-info mb-2">Porsi Terjual</div>
+                            <div class="fs-2hx fw-bold text-gray-800">
+                                {{ number_format($summary['items_sold'], 0, ',', '.') }} <span
+                                    class="fs-4 text-muted">Porsi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-5 g-xl-10 mb-xl-10 mt-5">
+                <div class="col-xl-8">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header pt-5 border-0">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold fs-3 mb-1">Performa Restoran Harian</span>
+                                <span class="text-muted fw-semibold fs-7">Omzet Aktual vs Target ({{ $selMonthLabel }})</span>
+                            </h3>
+                        </div>
+                        <div class="card-body pt-2 pb-0 ps-0">
+                            <div id="kt_sales_chart" style="height: 350px"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header pt-5 border-0">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold fs-3 mb-1">Menu Paling Laku</span>
+                                <span class="text-muted fw-semibold fs-7">Top 5 Penjualan Terbanyak Bulan Ini</span>
+                            </h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            @forelse($topProducts as $top)
+                                <div class="d-flex flex-stack mb-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol py-2 symbol-40px me-4">
+                                            <span
+                                                class="symbol-label bg-light-primary text-primary fw-bold">{{ $loop->iteration }}</span>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <a href="#"
+                                                class="fs-6 text-gray-800 text-hover-primary fw-bold mb-1">{{ $top->menu->name ?? 'Menu Dihapus' }}</a>
+                                            <div class="fw-semibold text-gray-400 fs-8">
+                                                {{ $top->menu->category->name ?? '-' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-end">
+                                        <div class="fs-5 fw-bolder text-gray-800">{{ $top->total_qty }} <span
+                                                class="fs-8 fw-normal text-muted">Porsi</span></div>
+                                        <div class="fs-7 fw-bold text-success">Rp
+                                            {{ number_format($top->total_revenue, 0, ',', '.') }}</div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center text-muted py-10">Belum ada data pesanan bulan ini.</div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold fs-3 mb-1 text-danger"><i
+                                        class="ki-outline ki-warning-2 fs-2 text-danger me-2"></i> Daftar Menu Habis</span>
+                                <span class="text-muted fw-semibold fs-7">Menu yang saat ini tidak tersedia untuk
+                                    dipesan</span>
+                            </h3>
+                            <div class="card-toolbar">
+                                <a href="#" class="btn btn-sm btn-light-primary">Kelola Menu</a>
+                            </div>
+                        </div>
+                        <div class="card-body py-3">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                    <thead>
+                                        <tr class="fw-bold text-muted bg-light">
+                                            <th class="ps-4 rounded-start">Kategori</th>
+                                            <th>Nama Menu</th>
+                                            <th class="text-end pe-4 rounded-end">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($unavailableMenus as $menu)
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <span
+                                                        class="badge badge-light-dark">{{ $menu->category->name ?? '-' }}</span>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-gray-800">{{ $menu->name }}</div>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <span class="text-danger fw-bold"><i
+                                                            class="ki-outline ki-cross-circle fs-5 text-danger"></i>
+                                                        Habis</span>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted py-5">Semua menu saat ini
+                                                    tersedia! 🎉</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            var chartData = @json($chartData);
+            var element = document.getElementById('kt_sales_chart');
+
+            if (!element) return;
+
+            var options = {
+                series: [{
+                    name: 'Omzet Aktual',
+                    type: 'column',
+                    data: chartData.sales
+                }, {
+                    name: 'Target Penjualan',
+                    type: 'line',
+                    data: chartData.targets
+                }],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    fontFamily: 'Inter, sans-serif',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                stroke: {
+                    width: [0, 4],
+                    curve: 'smooth'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                labels: chartData.categories,
+                xaxis: {
+                    type: 'category',
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    labels: {
+                        style: {
+                            colors: '#a1a5b7',
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            return "Rp " + (value || 0).toLocaleString('id-ID');
+                        },
+                        style: {
+                            colors: '#a1a5b7',
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                colors: ['#4f46e5', '#f1416c'],
+                fill: {
+                    opacity: [0.85, 1]
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right'
+                },
+                grid: {
+                    borderColor: '#eff2f5',
+                    strokeDashArray: 4,
+                    yaxis: {
+                        lines: {
+                            show: true
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(element, options);
+            chart.render();
+        });
+    </script>
+@endpush
